@@ -241,12 +241,11 @@
 </head>
 <body>
     <div class="login-container">
-        <h1>✨💖 DYNASTY 💖✨</h1>
-        <div class="subtitle">Enter to Continue</div>
+        <h1>💖 HOREGANG 💖</h1>
         
         <div class="welcome-text">
             Welcome to The Horegang Dynasty!<br>
-            Please login to access the sacred chronicles.
+            Please login to access the Sacred Chronicles™️
         </div>
         
         <div id="errorMessage" class="error-message"></div>
@@ -267,9 +266,15 @@
     </div>
     
     <script>
-        // ⚠️ CHANGE THESE CREDENTIALS TO YOUR DESIRED USERNAME AND PASSWORD
-        const VALID_USERNAME = "dynasty";
-        const VALID_PASSWORD = "LockedInsidePub911!";
+        // ⚠️ ADD YOUR VALID USERS HERE
+        // Format: { username: "password" }
+        const VALID_USERS = {
+            "admin": "LockedInsidePub911!",
+            "horegangfan": "Bushdid911!",
+            // Add more users below:
+            // "username1": "password1",
+            // "username2": "password2",
+        };
         
         // Check if already logged in
         if (sessionStorage.getItem('dynastyLoggedIn') === 'true') {
@@ -286,10 +291,11 @@
             // Clear previous error
             errorMessage.classList.remove('show');
             
-            // Check credentials
-            if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+            // Check if username exists and password matches
+            if (VALID_USERS[username] && VALID_USERS[username] === password) {
                 // Set session storage to remember login
                 sessionStorage.setItem('dynastyLoggedIn', 'true');
+                sessionStorage.setItem('dynastyUsername', username); // Optional: save username
                 
                 // Success feedback
                 const loginBtn = document.querySelector('.login-btn');
