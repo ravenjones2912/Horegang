@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨💖 Gallery 💖✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+        
+        * {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="8" fill="hotpink"/></svg>'), auto;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 105, 180, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 20, 147, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, #ff1493 0%, #ff69b4 25%, #ffc0cb 50%, #ff69b4 75%, #ff1493 100%);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 400% 400%;
+            animation: gradient 15s ease infinite;
+            font-family: 'Comic Neue', cursive;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%, 0% 50%, 0% 50%, 0% 50%; }
+            50% { background-position: 100% 50%, 100% 50%, 100% 50%, 100% 50%; }
+            100% { background-position: 0% 50%, 0% 50%, 0% 50%, 0% 50%; }
+        }
+        
+        /* Sparkle overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle, white 1px, transparent 1px),
+                radial-gradient(circle, hotpink 1px, transparent 1px),
+                radial-gradient(circle, #ffd700 1px, transparent 1px);
+            background-size: 50px 50px, 80px 80px, 100px 100px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            animation: sparkle 3s linear infinite;
+            pointer-events: none;
+            opacity: 0.6;
+            z-index: 1;
+        }
+        
+        @keyframes sparkle {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100vh;
+            background: linear-gradient(180deg, 
+                rgba(255, 20, 147, 0.95) 0%,
+                rgba(255, 105, 180, 0.95) 50%,
+                rgba(255, 192, 203, 0.95) 100%);
+            padding: 20px;
+            box-shadow: 4px 0 20px rgba(255, 20, 147, 0.5);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .sidebar-title {
+            color: white;
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-button {
+            background: linear-gradient(135deg, #ff69b4, #ffd700);
+            border: 3px solid white;
+            border-radius: 15px;
+            padding: 15px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+            display: block;
+        }
+        
+        .nav-button:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+            background: linear-gradient(135deg, #ffd700, #ff69b4);
+        }
+        
+        .nav-button.active {
+            background: linear-gradient(135deg, #ffd700, #ff1493);
+            border-color: #ffd700;
+            transform: scale(1.05);
+        }
+        
+        /* Main content area */
+        .main-content {
+            margin-left: 200px;
+            width: calc(100% - 200px);
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        
+        .gallery-container {
+            max-width: 1200px;
+            width: 100%;
+            background: 
+                radial-gradient(circle, rgba(255, 255, 255, 0.4) 2px, transparent 2px),
+                radial-gradient(circle at 20% 30%, rgba(255, 192, 203, 0.5) 0%, transparent 40%),
+                radial-gradient(circle at 80% 50%, rgba(173, 216, 230, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 40% 80%, rgba(255, 240, 180, 0.5) 0%, transparent 40%),
+                radial-gradient(circle at 70% 20%, rgba(230, 255, 230, 0.5) 0%, transparent 40%),
+                radial-gradient(circle at 50% 60%, rgba(230, 200, 255, 0.4) 0%, transparent 40%),
+                linear-gradient(135deg, 
+                    rgba(230, 200, 255, 0.7) 0%,
+                    rgba(255, 230, 200, 0.7) 20%,
+                    rgba(200, 255, 230, 0.7) 40%,
+                    rgba(255, 220, 230, 0.7) 60%,
+                    rgba(200, 230, 255, 0.7) 80%,
+                    rgba(245, 230, 255, 0.7) 100%
+                );
+            background-size: 30px 30px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+            animation: containerSwirl 15s ease infinite;
+            border: 8px solid;
+            border-image: linear-gradient(45deg, #ff1493, #ff69b4, #ffd700, #ff69b4, #ff1493) 1;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 
+                0 0 60px rgba(255, 20, 147, 0.8),
+                0 0 80px rgba(255, 105, 180, 0.6),
+                inset 0 0 50px rgba(255, 192, 203, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+        
+        @keyframes containerSwirl {
+            0%, 100% { 
+                background-position: 0 0, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 50%;
+            }
+            50% { 
+                background-position: 30px 30px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 50%;
+            }
+        }
+        
+        h1 {
+            text-align: center;
+            background: linear-gradient(45deg, #ff1493, #ff69b4, #ffd700, #ff69b4, #ff1493);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 3.5em;
+            margin: 0 0 10px 0;
+            text-shadow: 
+                3px 3px 0px rgba(255, 105, 180, 0.5),
+                6px 6px 0px rgba(255, 182, 193, 0.3);
+            animation: rainbowText 3s ease infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+            letter-spacing: 3px;
+        }
+        
+        @keyframes rainbowText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #ff1493;
+            font-size: 1.4em;
+            margin: 0 0 40px 0;
+            font-weight: bold;
+            text-shadow: 
+                2px 2px 0px #ffc0cb,
+                -1px -1px 0px #ff69b4;
+            animation: bounce 2s ease infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .gallery-item {
+            background: linear-gradient(135deg, 
+                rgba(255, 192, 203, 0.9),
+                rgba(255, 240, 245, 0.95));
+            border-radius: 15px;
+            border: 4px solid;
+            border-image: linear-gradient(45deg, #ff69b4, #ffd700, #ff69b4) 1;
+            padding: 15px;
+            box-shadow: 
+                0 8px 32px rgba(255, 20, 147, 0.4),
+                inset 0 0 20px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 12px 40px rgba(255, 20, 147, 0.6),
+                inset 0 0 30px rgba(255, 255, 255, 0.4);
+        }
+        
+        .gallery-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #ffc0cb, #ffd700);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            margin-bottom: 10px;
+        }
+        
+        .gallery-caption {
+            color: #ff1493;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+        
+        .upload-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, 
+                rgba(255, 215, 0, 0.8),
+                rgba(255, 240, 200, 0.9));
+            border-radius: 15px;
+            border: 4px solid #ffd700;
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.4);
+        }
+        
+        .upload-button {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            border: 3px solid white;
+            border-radius: 15px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 20, 147, 0.6);
+        }
+        
+        .info-text {
+            color: #8b008b;
+            font-size: 1.1em;
+            margin-top: 20px;
+            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+        }
+        
+        .heart {
+            position: fixed;
+            bottom: -50px;
+            font-size: 2em;
+            animation: float linear;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        @keyframes float {
+            to {
+                bottom: 110vh;
+                transform: translateY(-100px);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 150px;
+                padding: 10px;
+            }
+            
+            .main-content {
+                margin-left: 150px;
+                width: calc(100% - 150px);
+            }
+            
+            .nav-button {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Lightbox styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .lightbox.active {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border: 6px solid;
+            border-image: linear-gradient(45deg, #ff1493, #ff69b4, #ffd700, #ff69b4, #ff1493) 1;
+            border-radius: 10px;
+            box-shadow: 0 0 60px rgba(255, 20, 147, 0.8);
+            animation: zoomIn 0.3s ease;
+        }
+        
+        @keyframes zoomIn {
+            from { 
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to { 
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .lightbox-caption {
+            color: white;
+            font-size: 1.5em;
+            margin-top: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            background: linear-gradient(135deg, rgba(255, 20, 147, 0.8), rgba(255, 105, 180, 0.8));
+            padding: 15px 30px;
+            border-radius: 15px;
+            border: 3px solid #ffd700;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.6);
+        }
+        
+        .lightbox-close:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 6px 25px rgba(255, 20, 147, 0.8);
+        }
+        
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #ff69b4, #ffd700);
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.6);
+        }
+        
+        .lightbox-nav:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 25px rgba(255, 105, 180, 0.8);
+        }
+        
+        .lightbox-prev {
+            left: 20px;
+        }
+        
+        .lightbox-next {
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google API Script -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-title">💖 MENU 💖</div>
+        <a href="home.html" class="nav-button">🏠 Home</a>
+        <a href="timeline.html" class="nav-button">🕰️Timeline</a>
+        <a href="gallery.html" class="nav-button active">📸 Gallery</a>
+        <a href="journal.html" class="nav-button">📔 Day 312 in the Big Brother house</a>
+        <a href="family-wreath.html" class="nav-button">🌸 Family Wreath</a>
+        <button class="nav-button" onclick="logout()" style="margin-top: auto; cursor: pointer; font-family: 'Comic Neue', cursive;">🔒 Logout</button>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="gallery-container">
+            <h1>✨💖 Gallery 💖✨</h1>
+            <div class="subtitle">Memories of the Horegang Dynasty</div>
+            
+            <div class="upload-section">
+                <!-- Local Storage Status -->
+                <div id="driveStatus" style="text-align: center; margin-bottom: 20px; padding: 20px; background: rgba(144, 238, 144, 0.9); border: 4px solid #90ee90; border-radius: 15px; box-shadow: 0 4px 15px rgba(144, 238, 144, 0.3);">
+                    <div>
+                        <strong style="font-size: 1.2em;">📱 Local Storage:</strong><br>
+                        <span style="font-size: 1.1em; color: #006400; font-weight: bold;">✅ All images saved locally in your browser</span>
+                    </div>
+                </div>
+                
+                <input type="file" id="imageInput" accept="image/*" style="display: none;" multiple>
+                <div class="upload-button" onclick="document.getElementById('imageInput').click()">
+                    📸 Add Photos
+                </div>
+                <div class="info-text">
+                    💖 Click the button above to browse and select your favorite screenshots! 💖<br>
+                    You can select multiple images at once!<br>
+                    <br>
+                    <strong>💾 Storage:</strong> Images saved in your browser (localStorage)
+                </div>
+            </div>
+            
+            <div class="gallery-grid">
+                <!-- Example placeholder items - replace with your actual images -->
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">🦇</div>
+                    <div class="gallery-caption">Vlad's Reign</div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">👑</div>
+                    <div class="gallery-caption">Queen Hortensia</div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">💕</div>
+                    <div class="gallery-caption">The Sacrifices</div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">💥</div>
+                    <div class="gallery-caption">The Fall</div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">✨</div>
+                    <div class="gallery-caption">Clemensia & Vlad</div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="gallery-placeholder">🌸</div>
+                    <div class="gallery-caption">Begonia's Revenge</div>
+                </div>
+                
+                <!-- Add more gallery items here! -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ========================================
+        // LOGIN PROTECTION
+        // ========================================
+        if (sessionStorage.getItem('dynastyLoggedIn') !== 'true') {
+            window.location.href = 'index.html';
+        }
+        
+        // ========================================
+        // LOGOUT FUNCTION
+        // ========================================
+        function logout() {
+            sessionStorage.removeItem('dynastyLoggedIn');
+            window.location.href = 'index.html';
+        }
+        
+        // ========================================
+        // LOCAL STORAGE OPERATIONS
+        // ========================================
+        function saveToLocalStorage() {
+            const galleryGrid = document.querySelector('.gallery-grid');
+            if (!galleryGrid) {
+                console.error('Gallery grid not found!');
+                return;
+            }
+            
+            const uploadedItems = Array.from(galleryGrid.querySelectorAll('.gallery-item.uploaded'));
+            
+            const imagesToSave = uploadedItems.map(item => {
+                const img = item.querySelector('img');
+                const caption = item.querySelector('.gallery-caption');
+                return {
+                    src: img.src,
+                    name: caption.textContent
+                };
+            });
+            
+            localStorage.setItem('galleryImages', JSON.stringify(imagesToSave));
+            console.log(`Saved ${imagesToSave.length} images to localStorage`);
+        }
+        
+        function loadFromLocalStorage() {
+            const savedImages = JSON.parse(localStorage.getItem('galleryImages') || '[]');
+            const galleryGrid = document.querySelector('.gallery-grid');
+            
+            if (!galleryGrid) {
+                console.error('Gallery grid not found!');
+                return;
+            }
+            
+            console.log(`Loading ${savedImages.length} images from localStorage`);
+            
+            savedImages.forEach((imageData, index) => {
+                const imageId = 'local-saved-' + index;
+                createGalleryItem(imageData.src, imageData.name, imageId, galleryGrid, false);
+            });
+        }
+        
+        // ========================================
+        // CREATE GALLERY ITEM ELEMENT
+        // ========================================
+        function createGalleryItem(imageSrc, imageName, imageId, galleryGrid, isNew = true) {
+            console.log('=== CREATE GALLERY ITEM CALLED ===');
+            console.log('Image name:', imageName);
+            console.log('Image ID:', imageId);
+            console.log('Gallery grid exists:', !!galleryGrid);
+            console.log('Is new:', isNew);
+            
+            if (!galleryGrid) {
+                console.error('Gallery grid not provided to createGalleryItem');
+                return;
+            }
+            
+            // Create the main gallery item container (polaroid card)
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item uploaded';
+            galleryItem.dataset.imageId = imageId;
+            if (isNew) {
+                galleryItem.style.animation = 'slideIn 0.5s ease';
+            }
+            console.log('Created gallery item div');
+            
+            // Create the image container (like gallery-placeholder but with actual image)
+            const imageContainer = document.createElement('div');
+            imageContainer.style.cssText = `
+                width: 100%;
+                height: 200px;
+                background: #f0f0f0;
+                border-radius: 10px;
+                margin-bottom: 10px;
+                overflow: hidden;
+                cursor: pointer;
+                position: relative;
+            `;
+            
+            // Create image element
+            const img = document.createElement('img');
+            img.src = imageSrc;
+            img.alt = imageName;
+            img.style.cssText = `
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            `;
+            console.log('Created image element');
+            
+            // Add hover effect to image
+            imageContainer.onmouseover = function() {
+                img.style.transform = 'scale(1.1)';
+            };
+            imageContainer.onmouseout = function() {
+                img.style.transform = 'scale(1)';
+            };
+            
+            // Open lightbox on click
+            imageContainer.onclick = function() {
+                openLightbox(imageSrc, imageName);
+            };
+            
+            imageContainer.appendChild(img);
+            
+            // Create caption (using the existing gallery-caption class)
+            const caption = document.createElement('div');
+            caption.className = 'gallery-caption';
+            caption.textContent = imageName;
+            console.log('Created caption');
+            
+            // Add delete button
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '🗑️ Remove';
+            deleteBtn.style.cssText = `
+                background: linear-gradient(135deg, #ff1493, #ff69b4);
+                border: 2px solid white;
+                border-radius: 8px;
+                padding: 8px 15px;
+                color: white;
+                font-size: 0.9em;
+                font-weight: bold;
+                margin-top: 10px;
+                cursor: pointer;
+                font-family: 'Comic Neue', cursive;
+                transition: all 0.3s ease;
+            `;
+            deleteBtn.onmouseover = function() {
+                this.style.transform = 'scale(1.05)';
+            };
+            deleteBtn.onmouseout = function() {
+                this.style.transform = 'scale(1)';
+            };
+            deleteBtn.onclick = function(e) {
+                e.stopPropagation(); // Prevent triggering lightbox
+                if (confirm('Are you sure you want to delete this image? 💔')) {
+                    galleryItem.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        galleryItem.remove();
+                        saveToLocalStorage();
+                    }, 300);
+                }
+            };
+            console.log('Created delete button');
+            
+            // Assemble the gallery item (polaroid card)
+            galleryItem.appendChild(imageContainer);
+            galleryItem.appendChild(caption);
+            galleryItem.appendChild(deleteBtn);
+            console.log('Assembled gallery item');
+            
+            // Add to gallery (insert at the beginning, after the themed cards)
+            // Find the first uploaded item or add at the end
+            const firstUploadedItem = galleryGrid.querySelector('.gallery-item.uploaded');
+            if (firstUploadedItem) {
+                console.log('Inserting before existing uploaded item');
+                galleryGrid.insertBefore(galleryItem, firstUploadedItem);
+            } else {
+                console.log('Appending to end of gallery');
+                galleryGrid.appendChild(galleryItem);
+            }
+            
+            console.log(`✅ Successfully created and added gallery item: ${imageName}`);
+            console.log('Total uploaded items now:', galleryGrid.querySelectorAll('.gallery-item.uploaded').length);
+        }
+        
+        // ========================================
+        // HANDLE IMAGE UPLOADS
+        // ========================================
+        document.getElementById('imageInput').addEventListener('change', async function(e) {
+            console.log('=== FILE INPUT CHANGED ===');
+            const files = e.target.files;
+            console.log('Number of files selected:', files.length);
+            
+            const galleryGrid = document.querySelector('.gallery-grid');
+            console.log('Gallery grid found:', !!galleryGrid);
+            
+            if (!files.length) {
+                console.log('No files selected');
+                return;
+            }
+            
+            // Process each selected file
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                console.log(`Processing file ${i + 1}:`, file.name, file.type);
+                
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select only image files! 💖');
+                    console.log('Skipping non-image file:', file.type);
+                    continue;
+                }
+                
+                // Read and save to localStorage
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    console.log('File loaded:', file.name);
+                    const fileName = file.name.replace(/\.[^/.]+$/, "");
+                    const imageId = 'local-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                    console.log('Creating gallery item with ID:', imageId);
+                    
+                    createGalleryItem(event.target.result, fileName, imageId, galleryGrid, true);
+                    
+                    // Save after image is added
+                    setTimeout(() => {
+                        console.log('Saving to localStorage...');
+                        saveToLocalStorage();
+                    }, 100);
+                };
+                reader.onerror = function(error) {
+                    console.error('Error reading file:', error);
+                };
+                console.log('Starting to read file as DataURL...');
+                reader.readAsDataURL(file);
+            }
+            
+            // Clear the input
+            e.target.value = '';
+            console.log('=== FILE INPUT PROCESSING COMPLETE ===');
+        });
+        
+        // ========================================
+        // FLOATING HEARTS ANIMATION
+        // ========================================
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = ['💖', '✨', '💕', '⭐', '💗'][Math.floor(Math.random() * 5)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 10000);
+        }, 500);
+        
+        // ========================================
+        // ANIMATIONS
+        // ========================================
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: scale(0.8) translateY(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                to {
+                    opacity: 0;
+                    transform: scale(0.8);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // ========================================
+        // LIGHTBOX FUNCTIONS
+        // ========================================
+        let currentLightboxImages = [];
+        let currentLightboxIndex = 0;
+        
+        function openLightbox(imageSrc, imageCaption) {
+            // Get all uploaded images for navigation
+            const galleryGrid = document.querySelector('.gallery-grid');
+            const uploadedItems = Array.from(galleryGrid.querySelectorAll('.gallery-item.uploaded'));
+            currentLightboxImages = uploadedItems.map(item => {
+                const img = item.querySelector('img');
+                const caption = item.querySelector('.gallery-caption');
+                return {
+                    src: img.src,
+                    caption: caption.textContent
+                };
+            });
+            
+            // Find current image index
+            currentLightboxIndex = currentLightboxImages.findIndex(img => img.src === imageSrc);
+            
+            // Set lightbox content
+            document.getElementById('lightboxImage').src = imageSrc;
+            document.getElementById('lightboxCaption').textContent = imageCaption;
+            document.getElementById('lightbox').classList.add('active');
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        function changeLightboxImage(direction) {
+            if (currentLightboxImages.length === 0) return;
+            
+            currentLightboxIndex += direction;
+            
+            // Loop around
+            if (currentLightboxIndex < 0) {
+                currentLightboxIndex = currentLightboxImages.length - 1;
+            } else if (currentLightboxIndex >= currentLightboxImages.length) {
+                currentLightboxIndex = 0;
+            }
+            
+            const currentImage = currentLightboxImages[currentLightboxIndex];
+            document.getElementById('lightboxImage').src = currentImage.src;
+            document.getElementById('lightboxCaption').textContent = currentImage.caption;
+        }
+        
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                changeLightboxImage(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeLightboxImage(1);
+            }
+        });
+        
+        // Close lightbox when clicking outside image
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+        
+        // ========================================
+        // LOAD ON PAGE LOAD
+        // ========================================
+        window.onload = function() {
+            loadFromLocalStorage();
+        };
+    </script>
+    
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-close" onclick="closeLightbox()">✕</div>
+        <div class="lightbox-nav lightbox-prev" onclick="changeLightboxImage(-1)">‹</div>
+        <div class="lightbox-nav lightbox-next" onclick="changeLightboxImage(1)">›</div>
+        <div class="lightbox-content">
+            <img id="lightboxImage" class="lightbox-image" src="" alt="">
+            <div id="lightboxCaption" class="lightbox-caption"></div>
+        </div>
+    </div>
+</body>
+</html>

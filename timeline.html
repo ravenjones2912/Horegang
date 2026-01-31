@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨💖 Generational Horegang 💖✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+        
+        * {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="8" fill="hotpink"/></svg>'), auto;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 105, 180, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 20, 147, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, #ff1493 0%, #ff69b4 25%, #ffc0cb 50%, #ff69b4 75%, #ff1493 100%);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 400% 400%;
+            animation: gradient 15s ease infinite;
+            font-family: 'Comic Neue', cursive;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%, 0% 50%, 0% 50%, 0% 50%; }
+            50% { background-position: 100% 50%, 100% 50%, 100% 50%, 100% 50%; }
+            100% { background-position: 0% 50%, 0% 50%, 0% 50%, 0% 50%; }
+        }
+        
+        /* Sparkle overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle, white 1px, transparent 1px),
+                radial-gradient(circle, hotpink 1px, transparent 1px),
+                radial-gradient(circle, #ffd700 1px, transparent 1px);
+            background-size: 50px 50px, 80px 80px, 100px 100px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            animation: sparkle 3s linear infinite;
+            pointer-events: none;
+            opacity: 0.6;
+            z-index: 1;
+        }
+        
+        @keyframes sparkle {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100vh;
+            background: linear-gradient(180deg, 
+                rgba(255, 20, 147, 0.95) 0%,
+                rgba(255, 105, 180, 0.95) 50%,
+                rgba(255, 192, 203, 0.95) 100%);
+            padding: 20px;
+            box-shadow: 4px 0 20px rgba(255, 20, 147, 0.5);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .sidebar-title {
+            color: white;
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-button {
+            background: linear-gradient(135deg, #ff69b4, #ffd700);
+            border: 3px solid white;
+            border-radius: 15px;
+            padding: 15px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+            display: block;
+        }
+        
+        .nav-button:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+            background: linear-gradient(135deg, #ffd700, #ff69b4);
+        }
+        
+        .nav-button.active {
+            background: linear-gradient(135deg, #ffd700, #ff1493);
+            border-color: #ffd700;
+            transform: scale(1.05);
+        }
+        
+        /* Main content wrapper */
+        .main-content {
+            margin-left: 200px;
+            width: calc(100% - 200px);
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .timeline-container {
+            max-width: 1200px;
+            width: 100%;
+            background: 
+                radial-gradient(circle, rgba(255, 255, 255, 0.4) 2px, transparent 2px),
+                radial-gradient(circle at 20% 30%, rgba(255, 192, 203, 0.5) 0%, transparent 40%),
+                radial-gradient(circle at 80% 50%, rgba(173, 216, 230, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 40% 80%, rgba(255, 240, 180, 0.5) 0%, transparent 40%),
+                radial-gradient(circle at 70% 20%, rgba(230, 255, 230, 0.5) 0%, transparent 40%),
+                radial-gradient(circle at 50% 60%, rgba(230, 200, 255, 0.4) 0%, transparent 40%),
+                linear-gradient(135deg, 
+                    rgba(230, 200, 255, 0.7) 0%,    /* soft lavender */
+                    rgba(255, 230, 200, 0.7) 20%,   /* peachy */
+                    rgba(200, 255, 230, 0.7) 40%,   /* mint */
+                    rgba(255, 220, 230, 0.7) 60%,   /* pink */
+                    rgba(200, 230, 255, 0.7) 80%,   /* baby blue */
+                    rgba(245, 230, 255, 0.7) 100%   /* lilac */
+                );
+            background-size: 30px 30px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+            background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+            animation: containerSwirl 15s ease infinite;
+            border: 8px solid;
+            border-image: linear-gradient(45deg, #ff1493, #ff69b4, #ffd700, #ff69b4, #ff1493) 1;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 
+                0 0 60px rgba(255, 20, 147, 0.8),
+                0 0 80px rgba(255, 105, 180, 0.6),
+                inset 0 0 50px rgba(255, 192, 203, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+        
+        @keyframes containerSwirl {
+            0%, 100% { 
+                background-position: 0 0, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 50%;
+            }
+            50% { 
+                background-position: 30px 30px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 50%;
+            }
+        }
+        
+        h1 {
+            text-align: center;
+            background: linear-gradient(45deg, #ff1493, #ff69b4, #ffd700, #ff69b4, #ff1493);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 3.5em;
+            margin: 0 0 10px 0;
+            text-shadow: 
+                3px 3px 0px rgba(255, 105, 180, 0.5),
+                6px 6px 0px rgba(255, 182, 193, 0.3);
+            animation: rainbowText 3s ease infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+            letter-spacing: 3px;
+        }
+        
+        @keyframes rainbowText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #ff1493;
+            font-size: 1.4em;
+            margin: 0 0 40px 0;
+            font-weight: bold;
+            text-shadow: 
+                2px 2px 0px #ffc0cb,
+                -1px -1px 0px #ff69b4;
+            animation: bounce 2s ease infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                #ff1493 0%, 
+                #ff69b4 25%, 
+                #ffd700 50%, 
+                #ff69b4 75%, 
+                #ff1493 100%);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            animation: pulse 2s ease infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 1); }
+        }
+        
+        .event {
+            position: relative;
+            margin: 30px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .event.left {
+            justify-content: flex-end;
+            padding-right: 52%;
+        }
+        
+        .event.right {
+            justify-content: flex-start;
+            padding-left: 52%;
+        }
+        
+        .event-content {
+            background: linear-gradient(135deg, rgba(255, 240, 245, 0.98) 0%, rgba(255, 182, 193, 0.95) 100%);
+            border: 4px solid;
+            border-image: linear-gradient(45deg, #ff1493, #ffd700, #ff69b4) 1;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 400px;
+            box-shadow: 
+                0 0 20px rgba(255, 105, 180, 0.6),
+                0 8px 25px rgba(255, 20, 147, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .event-content::before {
+            content: '✨';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            font-size: 1.5em;
+            animation: spin 4s linear infinite;
+        }
+        
+        .event-content::after {
+            content: '💖';
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            font-size: 1.5em;
+            animation: spin 4s linear infinite reverse;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .event-content:hover {
+            transform: scale(1.08) rotate(-1deg);
+            box-shadow: 
+                0 0 40px rgba(255, 105, 180, 1),
+                0 10px 35px rgba(255, 20, 147, 0.5);
+        }
+        
+        .year {
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff1493, #ffd700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 8px 0;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+        }
+        
+        .event-title {
+            font-size: 1.3em;
+            color: #ff1493;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(255, 192, 203, 0.8);
+        }
+        
+        .event-description {
+            color: #c71585;
+            font-size: 1em;
+            line-height: 1.6;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #ffd700, #ff69b4, #ff1493);
+            border: 5px solid #ffffff;
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: 
+                0 0 30px rgba(255, 215, 0, 1),
+                0 0 40px rgba(255, 105, 180, 0.8),
+                0 0 50px rgba(255, 20, 147, 0.6);
+            animation: dotPulse 2s ease infinite;
+        }
+        
+        @keyframes dotPulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.2); }
+        }
+        
+        .major-event .dot {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #ffd700, #ff69b4, #ff1493);
+            border-color: #ffffff;
+            box-shadow: 
+                0 0 30px rgba(255, 215, 0, 1),
+                0 0 40px rgba(255, 105, 180, 0.8),
+                0 0 50px rgba(255, 20, 147, 0.6);
+        }
+                0 0 50px rgba(255, 20, 147, 0.6);
+        }
+        
+        .icon {
+            font-size: 1.8em;
+            margin-right: 8px;
+            display: inline-block;
+            animation: wiggle 3s ease infinite;
+        }
+        
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+        
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #ff1493;
+            font-weight: bold;
+            font-size: 1.1em;
+            border-top: 4px dashed #ff69b4;
+            padding-top: 20px;
+            text-shadow: 1px 1px 2px rgba(255, 192, 203, 0.8);
+        }
+        
+        .sacrifice-tracker {
+            background: linear-gradient(135deg, rgba(255, 182, 193, 0.95) 0%, rgba(255, 240, 245, 0.95) 100%);
+            border: 6px solid;
+            border-image: linear-gradient(45deg, #ff1493, #ffd700, #ff69b4, #ffd700, #ff1493) 1;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 40px 0;
+            box-shadow: 
+                0 0 30px rgba(255, 105, 180, 0.6),
+                inset 0 0 20px rgba(255, 192, 203, 0.3);
+        }
+        
+        .sacrifice-tracker h2 {
+            background: linear-gradient(45deg, #ff1493, #ffd700, #ff69b4);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin: 0 0 20px 0;
+            font-size: 2em;
+            animation: rainbowText 3s ease infinite;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+        }
+        
+        .sacrifice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 15px;
+        }
+        
+        .sacrifice-year {
+            background: linear-gradient(135deg, rgba(255, 192, 203, 0.8) 0%, rgba(255, 240, 245, 0.9) 100%);
+            border: 3px solid #ff69b4;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.95em;
+            color: #ff1493;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: 'Comic Neue', cursive;
+        }
+        
+        .sacrifice-year:hover {
+            transform: translateY(-5px) rotate(2deg);
+            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.6);
+            border-color: #ffd700;
+        }
+        
+        .sacrifice-year.notable {
+            background: linear-gradient(135deg, #ffd700 0%, #ff69b4 100%);
+            border-color: #ff1493;
+            border-width: 4px;
+            font-weight: bold;
+            box-shadow: 
+                0 0 20px rgba(255, 215, 0, 0.8),
+                0 4px 15px rgba(255, 20, 147, 0.4);
+            animation: notableGlow 2s ease infinite;
+        }
+        
+        @keyframes notableGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 4px 15px rgba(255, 20, 147, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 6px 20px rgba(255, 20, 147, 0.6); }
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, 
+                rgba(255, 192, 203, 0.98) 0%,
+                rgba(255, 182, 193, 0.98) 50%,
+                rgba(255, 240, 245, 0.98) 100%);
+            border: 6px solid;
+            border-image: linear-gradient(45deg, #ff1493, #ff69b4, #ffd700, #ff69b4, #ff1493) 1;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 
+                0 0 60px rgba(255, 20, 147, 0.8),
+                0 0 80px rgba(255, 105, 180, 0.6),
+                inset 0 0 50px rgba(255, 255, 255, 0.3);
+            position: relative;
+            animation: slideIn 0.4s ease;
+        }
+        
+        @keyframes slideIn {
+            from { 
+                transform: scale(0.7) translateY(-50px);
+                opacity: 0;
+            }
+            to { 
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .modal-title {
+            color: #ff1493;
+            font-size: 2em;
+            text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.5);
+            margin: 0 0 10px 0;
+        }
+        
+        .modal-subtitle {
+            color: #ff69b4;
+            font-size: 1.2em;
+            margin: 0;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2em;
+            color: #ff1493;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: all 0.3s ease;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            transform: rotate(90deg) scale(1.2);
+            color: #ffd700;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            color: #ff1493;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.3);
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 3px solid #ff69b4;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-family: 'Comic Neue', cursive;
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            background: white;
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .save-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff69b4, #ffd700);
+            border: 3px solid white;
+            border-radius: 15px;
+            color: white;
+            font-family: 'Comic Neue', cursive;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+            background: linear-gradient(135deg, #ffd700, #ff69b4);
+        }
+        
+        .save-btn:active {
+            transform: translateY(0);
+        }
+        
+        .sacrifice-number {
+            font-size: 0.85em;
+            color: #c71585;
+            display: block;
+            font-weight: 900;
+        }
+        
+        /* Floating hearts animation */
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; }
+        }
+        
+        .heart {
+            position: fixed;
+            font-size: 30px;
+            animation: float 10s linear infinite;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* Responsive adjustments for sidebar */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 150px;
+                padding: 10px;
+            }
+            
+            .main-content {
+                margin-left: 150px;
+                width: calc(100% - 150px);
+            }
+            
+            .nav-button {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-title">💖 MENU 💖</div>
+        <a href="home.html" class="nav-button">🏠 Home</a>
+        <a href="timeline.html" class="nav-button active">🕰️Timeline</a>
+        <a href="gallery.html" class="nav-button">📸 Gallery</a>
+        <a href="journal.html" class="nav-button">📔 Day 312 in the Big Brother house</a>
+        <a href="family-wreath.html" class="nav-button">🌸 Family Wreath</a>
+        <button class="nav-button" onclick="logout()" style="margin-top: auto; cursor: pointer; font-family: 'Comic Neue', cursive;">🔒 Logout</button>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+    <div class="timeline-container">
+        <h1>✨💖 Generational Horegang! 💖✨</h1>
+        <div class="subtitle">🦇 Celebrating 523 years of unchecked mental health issues and messy bitches 💅✨</div>
+        
+        <div class="timeline">
+            <!-- Year 0 -->
+            <div class="event left major-event">
+                <div class="event-content">
+                    <div class="year">YEAR 0</div>
+                    <div class="event-title"><span class="icon">🏰</span>IN THE BENINGING</div>
+                    <div class="event-description">Vlad, on the run from perrrrrrsecution, founds Forgotten Hollow. Sacrifice system established: one child every 18 years from one of 4 main families (Durrant, Hawthorne, Holloway, Marrow) And the families have to decide amongst themselves because I am an evil God.</div>
+                </div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- Year 18 -->
+            <div class="event right major-event">
+                <div class="event-content">
+                    <div class="year">YEAR 18</div>
+                    <div class="event-title"><span class="icon">⚔️</span>DO YOU HEAR THE PEOPLE SING?</div>
+                    <div class="event-description">Our second sacrifice is Petra Durrant. Her twin sister Thea broke into Vlad's house to visit her sister and watches frozen in the shadows as Vlad kills her. House Durrant not 'aving that. They attempt a rebellion and Vlad wipes them all out... or so he thinks. Petra's pregnant cousin Willa may or may not have made it to Moonwood Mill. Ahwoo. </div>
+                </div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- Year 72 -->
+            <div class="event left major-event">
+                <div class="event-content">
+                    <div class="year">YEAR 72</div>
+                    <div class="event-title"><span class="icon">⛪</span>SERVING CLOISTERED REALNESS</div>
+                    <div class="event-description"> The remaining 3 families (Hawthorne, Holloway and Marrow) come up with a new system. Three babies between 0 - 3 will be chosen every 18 years and raised cloistered by a Guardian from one of the families. Guardian chooses which child to sacrifice when the time comes. The other 2 kids are given back to their families. Guardians then retire and the next lot will be rasied by a different Guardian.   </div>
+                </div>
+                <div class="dot"></div>
+            </div>
+
+
+            <!-- Year 378 -->
+            <div class="event right">
+                <div class="event-content">
+                    <div class="year">YEAR 378</div>
+                    <div class="event-title"><span class="icon">🕯️</span>I'M GOING TO BE A SACRIFICE</div>
+                    <div class="event-description">Clemensia Holloway (18) becomes the 21st sacrifice.</div>
+                </div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- Year 392 -->
+            <div class="event left">
+                <div class="event-content">
+                    <div class="year">YEAR 392</div>
+                    <div class="event-title"><span class="icon">🦇</span>SHOW US YOUR FANGS...HEY MONA</div>
+                    <div class="event-description">After 14 years, Vlad turns Clemensia into a vampire. </div>
+                </div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- Year 488 -->
+            <div class="event right">
+                <div class="event-content">
+                    <div class="year">YEAR 488</div>
+                    <div class="event-title"><span class="icon">💔</span>MIDNIGHT MUNCHIES</div>
+                    <div class="event-description">Vlad kills Begonia's sister as a midnight snack :/ Begonia is 13, this will be a core memory.</div>
+                </div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- Year 498 -->
+            <div class="event left">
+                <div class="event-content">
+                    <div class="year">YEAR 498</div>
+                    <div class="event-title"><span class="icon">🎙️</span>BIGAMY PART 1</div>
+                    <div class="event-description">Begonia (23) marries Vlad in a Spiderman pointing a gun at a second Spiderman pointing a gun at him way and is playing the long game...</div>
+                </div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- Year 499 -->
+            <div class="event right">
+                <div class="event-content">
+                    <div class="year">YEAR 499</div>
+                    <div class="event-title"><span class="icon">👶</span>THADDEUS LAZARUS STRAUD</div>
+                    <div class="event-description">Begonia (24) has a son. Stillborn until he's not. Human.</div>
+                </div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- Year 505 -->
+            <div class="event left major-event">
+                <div class="event-content">
+                    <div class="year">YEAR 505</div>
+                    <div class="event-title"><span class="icon">👑</span>HORTENSIA VALENCIA STRAUD</div>
+                    <div class="event-description">Clemensia (145) has a Vampire daughter. Vlad's favorite. Our beloved diva forever and ever Amen..</div>
+                </div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- Year 509 -->
+            <div class="event right">
+                <div class="event-content">
+                    <div class="year">YEAR 509</div>
+                    <div class="event-title"><span class="icon">⚕️</span>BIGAMY PART 2</div>
+                    <div class="event-description">DOCTOR Zinnia Hawthorne (28) marries Vlad in a 'Duty Bound by prophetic visions' way.</div>
+                </div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- Year 522 -->
+            <div class="event left major-event">
+                <div class="event-content">
+                    <div class="year">YEAR 522</div>
+                    <div class="event-title"><span class="icon">🕯️</span>I'M GOING TO BE A SACRIFICE: TOKYO DRIFT</div>
+                    <div class="event-description">Zinnia's cousin (17) enters Stage Left. Hortensia (17) is having some very complidith feelings about this.</div>
+                </div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- Year 523 -->
+            <div class="event right major-event">
+                <div class="event-content">
+                    <div class="year">YEAR 523</div>
+                    <div class="event-title"><span class="icon">💥</span>THE FALL</div>
+                    <div class="event-description">
+                        A year later, Vlad's empire collapses under Thaddeus' hands... but he didn't do it alone. Patricide very in this season.<br><br>
+                        • Zinnia & Cousin → Sulani. If anyone needs a bit of R&R it's these bitches.<br>
+                        • Clemensia dies with Vlad because of course she does. Whatever their souls are made of et al.<br>
+                        • Begonia is sticking around because someone needs to raise her grandchild (That's right our Thaddy has a star crossed lover and she's pregnant) She has closure for her sister, finally.<br>
+                        • Hortensia has big decisions to make. Challenge Thad's dismantling of the system and take her place as rightful queen bitch of Hell or go totally off the rails in the complete opposite direction. Stay tuned baddies.
+                    </div>
+                </div>
+                <div class="dot"></div>
+            </div>
+        </div>
+        
+        <div class="sacrifice-tracker">
+            <h2>✨🕯️ THE SACRIFICE CYCLE 🕯️✨</h2>
+            <div class="sacrifice-grid">
+                <button class="sacrifice-year" onclick="openSacrificeModal(1)"><span class="sacrifice-number">#1</span>Year 0<br>Constance Holloway</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(2)"><span class="sacrifice-number">#2</span>Year 18<br>Petra Durrant</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(3)"><span class="sacrifice-number">#3</span>Year 36<br>Millicent Hawthorne</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(4)"><span class="sacrifice-number">#4</span>Year 54<br>Roderick Holloway</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(5)"><span class="sacrifice-number">#5</span>Year 72<br>Sybil Marrow</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(6)"><span class="sacrifice-number">#6</span>Year 90<br>Barnaby Marrow</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(7)"><span class="sacrifice-number">#7</span>Year 108<br>Dahlia Hawthorne</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(8)"><span class="sacrifice-number">#8</span>Year 126<br>Octavius Holloway</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(9)"><span class="sacrifice-number">#9</span>Year 144<br>Iris Marrow</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(10)"><span class="sacrifice-number">#10</span>Year 162<br>Jasper Hawthorne</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(11)"><span class="sacrifice-number">#11</span>Year 180<br>Lavinia Holloway</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(12)"><span class="sacrifice-number">#12</span>Year 198<br>Felix Marrow</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(13)"><span class="sacrifice-number">#13</span>Year 216<br>Marigold Hawthorne</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(14)"><span class="sacrifice-number">#14</span>Year 234<br>Silas Holloway</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(15)"><span class="sacrifice-number">#15</span>Year 252<br>Roman Marrow</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(16)"><span class="sacrifice-number">#16</span>Year 270<br>Jasper Hawthorne II</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(17)"><span class="sacrifice-number">#17</span>Year 288<br>Wren Holloway</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(18)"><span class="sacrifice-number">#18</span>Year 306<br>Cormac Marrow</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(19)"><span class="sacrifice-number">#19</span>Year 324<br>Violet Hawthorne</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(20)"><span class="sacrifice-number">#20</span>Year 342<br>Edmund Holloway</button>
+                <button class="sacrifice-year notable" onclick="openSacrificeModal(21)"><span class="sacrifice-number">#21</span>Year 360<br>✨Clemensia Holloway✨</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(22)"><span class="sacrifice-number">#22</span>Year 396<br>Bryony Marrow</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(23)"><span class="sacrifice-number">#23</span>Year 414<br>Atticus Hawthorne</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(24)"><span class="sacrifice-number">#24</span>Year 432<br>Hollis Holloway</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(25)"><span class="sacrifice-number">#25</span>Year 450<br>Titus Marrow</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(26)"><span class="sacrifice-number">#26</span>Year 468<br>Sage Hawthorne</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(27)"><span class="sacrifice-number">#27</span>Year 486<br>Oleander Marrow</button>
+                <button class="sacrifice-year" onclick="openSacrificeModal(28)"><span class="sacrifice-number">#28</span>Year 504<br>Mercy Holloway</button>
+                <button class="sacrifice-year notable" onclick="openSacrificeModal(29)"><span class="sacrifice-number">#29</span>Year 522<br>💖[Zinnia's Cousin]💖</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            💖✨ Gen 1: It's a rough one when your dad is a megalomaniac who created a Dynasty that just ate shit and you've been brutally orphaned by your half brother. Who hasn't been through that? You think you've seen mess but Hortensia (God love her) is the Oncoming Storm as it were. Alexa, play Waco Texas. ✨💖
+        </div>
+    </div>
+    </div>
+    
+    <!-- Sacrifice Modal -->
+    <div id="sacrificeModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeSacrificeModal()">✖</button>
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Sacrifice Notes</h2>
+                <p class="modal-subtitle" id="modalSubtitle"></p>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Sacrifice Number</label>
+                <input type="text" class="form-input" id="sacrificeNumber" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Year Sacrificed</label>
+                <input type="text" class="form-input" id="yearSacrificed" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-input" id="sacrificeName" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Age</label>
+                <input type="text" class="form-input" id="sacrificeAge" placeholder="Enter age...">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">The Cloistered 3</label>
+                <textarea class="form-textarea" id="cloistered3" placeholder="Notes about The Cloistered 3..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">The Choosening</label>
+                <textarea class="form-textarea" id="choosening" placeholder="Details about The Choosening..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">How It Ended</label>
+                <textarea class="form-textarea" id="howItEnded" placeholder="How did their sacrifice end?"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Legacy</label>
+                <textarea class="form-textarea" id="legacy" placeholder="Their lasting impact..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Guardian Fate</label>
+                <textarea class="form-textarea" id="guardianFate" placeholder="What happened to their guardian?"></textarea>
+            </div>
+            
+            <button class="save-btn" onclick="saveSacrificeNotes()">💖 Save Notes ✨</button>
+        </div>
+    </div>
+    
+    <script>
+        // ========================================
+        // LOGIN PROTECTION
+        // ========================================
+        if (sessionStorage.getItem('dynastyLoggedIn') !== 'true') {
+            window.location.href = 'index.html';
+        }
+        
+        // ========================================
+        // LOGOUT FUNCTION
+        // ========================================
+        function logout() {
+            sessionStorage.removeItem('dynastyLoggedIn');
+            window.location.href = 'index.html';
+        }
+        
+        // Sacrifice data
+        const sacrifices = [
+            { number: 1, year: 0, name: "Constance Holloway" },
+            { number: 2, year: 18, name: "Petra Durrant" },
+            { number: 3, year: 36, name: "Millicent Hawthorne" },
+            { number: 4, year: 54, name: "Roderick Holloway" },
+            { number: 5, year: 72, name: "Sybil Marrow" },
+            { number: 6, year: 90, name: "Barnaby Marrow" },
+            { number: 7, year: 108, name: "Dahlia Hawthorne" },
+            { number: 8, year: 126, name: "Octavius Holloway" },
+            { number: 9, year: 144, name: "Iris Marrow" },
+            { number: 10, year: 162, name: "Thorne Hawthorne" },
+            { number: 11, year: 180, name: "Lavinia Holloway" },
+            { number: 12, year: 198, name: "Felix Marrow" },
+            { number: 13, year: 216, name: "Marigold Hawthorne" },
+            { number: 14, year: 234, name: "Silas Holloway" },
+            { number: 15, year: 252, name: "Roman Marrow" },
+            { number: 16, year: 270, name: "Jasper Hawthorne II" },
+            { number: 17, year: 288, name: "Wren Holloway" },
+            { number: 18, year: 306, name: "Cormac Marrow" },
+            { number: 19, year: 324, name: "Violet Hawthorne" },
+            { number: 20, year: 342, name: "Edmund Holloway" },
+            { number: 21, year: 360, name: "Clemensia Holloway" },
+            { number: 22, year: 396, name: "Bryony Marrow" },
+            { number: 23, year: 414, name: "Atticus Hawthorne" },
+            { number: 24, year: 432, name: "Hollis Holloway" },
+            { number: 25, year: 450, name: "Titus Marrow" },
+            { number: 26, year: 468, name: "Sage Hawthorne" },
+            { number: 27, year: 486, name: "Oleander Marrow" },
+            { number: 28, year: 504, name: "Mercy Holloway" },
+            { number: 29, year: 522, name: "[Zinnia's Cousin]" }
+        ];
+        
+        let currentSacrificeId = null;
+        
+        // Open modal for specific sacrifice
+        function openSacrificeModal(sacrificeId) {
+            const sacrifice = sacrifices[sacrificeId - 1];
+            currentSacrificeId = sacrificeId;
+            
+            // Set basic info
+            document.getElementById('modalTitle').textContent = `${sacrifice.name}`;
+            document.getElementById('modalSubtitle').textContent = `Sacrifice #${sacrifice.number} - Year ${sacrifice.year}`;
+            document.getElementById('sacrificeNumber').value = `#${sacrifice.number}`;
+            document.getElementById('yearSacrificed').value = sacrifice.year;
+            document.getElementById('sacrificeName').value = sacrifice.name;
+            
+            // Load saved notes from localStorage
+            const savedNotes = getSavedNotes(sacrificeId);
+            document.getElementById('sacrificeAge').value = savedNotes.age || '';
+            document.getElementById('cloistered3').value = savedNotes.cloistered3 || '';
+            document.getElementById('choosening').value = savedNotes.choosening || '';
+            document.getElementById('howItEnded').value = savedNotes.howItEnded || '';
+            document.getElementById('legacy').value = savedNotes.legacy || '';
+            document.getElementById('guardianFate').value = savedNotes.guardianFate || '';
+            
+            // Show modal
+            document.getElementById('sacrificeModal').classList.add('show');
+        }
+        
+        // Close modal
+        function closeSacrificeModal() {
+            document.getElementById('sacrificeModal').classList.remove('show');
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('sacrificeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSacrificeModal();
+            }
+        });
+        
+        // Save sacrifice notes to localStorage
+        function saveSacrificeNotes() {
+            const notes = {
+                age: document.getElementById('sacrificeAge').value,
+                cloistered3: document.getElementById('cloistered3').value,
+                choosening: document.getElementById('choosening').value,
+                howItEnded: document.getElementById('howItEnded').value,
+                legacy: document.getElementById('legacy').value,
+                guardianFate: document.getElementById('guardianFate').value
+            };
+            
+            localStorage.setItem(`sacrifice_${currentSacrificeId}`, JSON.stringify(notes));
+            
+            // Show success feedback
+            const saveBtn = document.querySelector('.save-btn');
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = '✨ Saved! 💖';
+            saveBtn.style.background = 'linear-gradient(135deg, #ffd700, #ff1493)';
+            
+            setTimeout(() => {
+                saveBtn.textContent = originalText;
+                saveBtn.style.background = 'linear-gradient(135deg, #ff69b4, #ffd700)';
+            }, 1500);
+        }
+        
+        // Get saved notes from localStorage
+        function getSavedNotes(sacrificeId) {
+            const saved = localStorage.getItem(`sacrifice_${sacrificeId}`);
+            return saved ? JSON.parse(saved) : {};
+        }
+        
+        // Create floating hearts
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = ['💖', '✨', '💕', '⭐', '💗'][Math.floor(Math.random() * 5)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 10000);
+        }, 500);
+    </script>
+</body>
+</html>
