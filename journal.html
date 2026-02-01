@@ -772,11 +772,8 @@
         // ========================================
         window.onload = async function() {
             if (isAdmin) {
-                // Admin: try localStorage first, then GitHub
-                const loadedLocal = loadFromLocalStorage();
-                if (!loadedLocal) {
-                    await loadFromGitHub();
-                }
+                // Admin: Load from GitHub to see published version (same as visitors)
+                await loadFromGitHub();
             } else {
                 // Visitors: always load from GitHub
                 await loadFromGitHub();

@@ -1013,7 +1013,13 @@
                 document.getElementById('statusIndicator').innerHTML = '👑 ADMIN MODE - Upload and publish!';
                 document.getElementById('statusIndicator').style.cssText = 'background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 105, 180, 0.3)); border: 3px solid #ffd700; color: #ff1493;';
                 document.getElementById('publishSection').style.display = 'block';
-                loadFromLocalStorage(); // Load admin's local edits
+                
+                // Admin: Try to load from GitHub first, fall back to localStorage if no published version
+                const loaded = await loadGalleryFromGitHub();
+                if (!loaded) {
+                    // No published version, load local edits
+                    loadFromLocalStorage();
+                }
             } else {
                 document.getElementById('statusIndicator').innerHTML = '👀 VISITOR MODE - Viewing published gallery';
                 document.getElementById('statusIndicator').style.cssText = 'background: linear-gradient(135deg, rgba(173, 216, 230, 0.3), rgba(144, 238, 144, 0.3)); border: 3px solid #87ceeb; color: #006400;';
