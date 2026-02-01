@@ -199,34 +199,150 @@
             text-shadow: 
                 2px 2px 0px #ffc0cb,
                 -1px -1px 0px #ff69b4;
-            animation: bounce 2s ease infinite;
         }
         
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+        /* Status indicator */
+        .status-indicator {
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .status-admin {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 105, 180, 0.3));
+            border: 3px solid #ffd700;
+            color: #ff1493;
+        }
+        
+        .status-visitor {
+            background: linear-gradient(135deg, rgba(173, 216, 230, 0.3), rgba(144, 238, 144, 0.3));
+            border: 3px solid #87ceeb;
+            color: #006400;
+        }
+        
+        /* Publish button */
+        .publish-btn {
+            background: linear-gradient(135deg, #32cd32, #228b22);
+            border: 3px solid white;
+            border-radius: 15px;
+            padding: 18px;
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            font-family: 'Comic Neue', cursive;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(50, 205, 50, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .publish-btn:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 20px rgba(50, 205, 50, 0.6);
+        }
+        
+        .publish-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Form styles */
+        .add-entry-form {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border: 4px solid #ff69b4;
+            box-shadow: 0 4px 20px rgba(255, 105, 180, 0.3);
+        }
+        
+        .form-title {
+            color: #ff1493;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            color: #ff1493;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 3px solid #ff69b4;
+            border-radius: 10px;
+            font-family: 'Comic Neue', cursive;
+            font-size: 1em;
+            background: rgba(255, 255, 255, 0.9);
+            box-sizing: border-box;
+        }
+        
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #ff69b4, #ffd700);
+            border: 3px solid white;
+            border-radius: 12px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Comic Neue', cursive;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+        }
+        
+        /* Entries display */
+        .entries-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
         }
         
         .entry {
-            background: linear-gradient(135deg, 
-                rgba(255, 192, 203, 0.9),
-                rgba(255, 240, 245, 0.95));
-            border-radius: 15px;
-            border: 4px solid;
-            border-image: linear-gradient(45deg, #ff69b4, #ffd700, #ff69b4) 1;
+            background: rgba(255, 255, 255, 0.6);
             padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 
-                0 8px 32px rgba(255, 20, 147, 0.4),
-                inset 0 0 20px rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
+            border-radius: 15px;
+            border: 4px solid #ff69b4;
+            box-shadow: 0 4px 20px rgba(255, 105, 180, 0.3);
+            transition: transform 0.3s ease;
         }
         
         .entry:hover {
-            transform: translateY(-3px);
-            box-shadow: 
-                0 12px 40px rgba(255, 20, 147, 0.6),
-                inset 0 0 30px rgba(255, 255, 255, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(255, 105, 180, 0.5);
         }
         
         .entry-header {
@@ -235,157 +351,80 @@
             align-items: center;
             margin-bottom: 15px;
             flex-wrap: wrap;
+            gap: 10px;
         }
         
         .entry-day {
-            font-size: 1.5em;
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
             font-weight: bold;
-            color: #ff1493;
-            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.8);
+            font-size: 1.1em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         .entry-date {
-            color: #8b008b;
+            color: #ff1493;
             font-size: 1.1em;
-            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+            font-weight: bold;
         }
         
         .entry-content {
-            color: #8b008b;
+            color: #333;
             font-size: 1.1em;
-            line-height: 1.8;
-            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
-        }
-        
-        .new-entry-section {
-            background: linear-gradient(135deg, 
-                rgba(255, 215, 0, 0.8),
-                rgba(255, 240, 200, 0.9));
-            border-radius: 15px;
-            border: 4px solid #ffd700;
-            padding: 25px;
-            margin-bottom: 40px;
-            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.4);
-        }
-        
-        .new-entry-section h2 {
-            color: #ff1493;
-            font-size: 2em;
-            margin: 0 0 20px 0;
-            text-align: center;
-            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.8);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            color: #ff1493;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 8px;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
-        }
-        
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 3px solid #ff69b4;
-            border-radius: 10px;
-            font-family: 'Comic Neue', cursive;
-            font-size: 1.1em;
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: inset 0 2px 5px rgba(255, 105, 180, 0.2);
-            box-sizing: border-box;
-        }
-        
-        .form-group textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-        
-        .submit-button {
-            background: linear-gradient(135deg, #ff69b4, #ff1493);
-            border: 3px solid white;
-            border-radius: 15px;
-            padding: 15px 30px;
-            color: white;
-            font-size: 1.3em;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            width: 100%;
-        }
-        
-        .submit-button:hover {
-            transform: scale(1.03);
-            box-shadow: 0 6px 20px rgba(255, 20, 147, 0.6);
-        }
-        
-        .info-box {
-            background: rgba(173, 216, 230, 0.6);
-            border: 3px solid #87ceeb;
-            border-radius: 10px;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.8);
             padding: 15px;
-            margin-top: 20px;
-            color: #8b008b;
-            font-size: 1em;
-            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
         }
         
+        .delete-entry-btn {
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            border: 2px solid white;
+            border-radius: 8px;
+            padding: 8px 15px;
+            color: white;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+            font-family: 'Comic Neue', cursive;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-entry-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Floating hearts */
         .heart {
             position: fixed;
-            bottom: -50px;
-            font-size: 2em;
-            animation: float linear;
+            font-size: 30px;
+            animation: float 8s ease-in-out infinite;
             pointer-events: none;
             z-index: 1;
         }
         
         @keyframes float {
-            to {
-                bottom: 110vh;
-                transform: translateY(-100px);
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
             }
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 150px;
-                padding: 10px;
+            10% {
+                opacity: 1;
             }
-            
-            .main-content {
-                margin-left: 150px;
-                width: calc(100% - 150px);
+            90% {
+                opacity: 1;
             }
-            
-            .nav-button {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-            
-            h1 {
-                font-size: 2em;
-            }
-            
-            .entry-header {
-                flex-direction: column;
-                align-items: flex-start;
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Google API Script -->
-    <script src="https://apis.google.com/js/api.js"></script>
-    
     <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="sidebar-title">💖 MENU 💖</div>
@@ -400,48 +439,48 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="journal-container">
-            <h1>📔 Day 312 in the Big Brother house</h1>
-            <div class="subtitle">Your Sims 4 Chronicles</div>
+            <h1>💖 JOURNAL 💖</h1>
+            <div class="subtitle">Chronicles of the Horegang Dynasty</div>
             
-            <!-- New Entry Form -->
-            <div class="new-entry-section">
-                <h2>✨ Add New Entry ✨</h2>
-                
-                <!-- Local Storage Status -->
-                <div id="driveStatus" style="text-align: center; margin-bottom: 20px; padding: 20px; background: rgba(144, 238, 144, 0.9); border: 4px solid #90ee90; border-radius: 15px; box-shadow: 0 4px 15px rgba(144, 238, 144, 0.3);">
-                    <div>
-                        <strong style="font-size: 1.2em;">📱 Local Storage:</strong><br>
-                        <span style="font-size: 1.1em; color: #006400; font-weight: bold;">✅ All entries saved locally in your browser</span>
-                    </div>
-                </div>
-                
-                <form id="entryForm">
-                    <div class="form-group">
-                        <label for="dayNumber">Day Number:</label>
-                        <input type="text" id="dayNumber" placeholder="e.g., Day 312" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="entryDate">Date:</label>
-                        <input type="text" id="entryDate" placeholder="e.g., January 29, 2026" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="entryContent">What happened today:</label>
-                        <textarea id="entryContent" placeholder="Spill the tea on today's drama in the Big Brother house..." required></textarea>
-                    </div>
-                    
-                    <button type="submit" class="submit-button">💖 Save Entry 💖</button>
-                </form>
-                
-                <div class="info-box">
-                    💡 <strong>Tip:</strong> All your journal entries are automatically saved in your browser's local storage! They'll be here whenever you return.
+            <!-- Status Indicator -->
+            <div id="statusIndicator" class="status-indicator"></div>
+            
+            <!-- Publish Button (Admin Only) -->
+            <div id="publishSection" style="display: none;">
+                <button class="publish-btn" onclick="downloadJournalJSON()">
+                    📥 Download journal.json
+                </button>
+                <div style="margin-top: 10px; color: #006400; font-size: 0.9em; text-align: center;">
+                    Download, then upload to <a href="https://github.com/ravenjones2912/HoregangData" target="_blank" style="color: #228b22; font-weight: bold;">HoregangData repo</a>
                 </div>
             </div>
             
-            <!-- Journal Entries -->
-            <div id="entriesContainer">
-                <!-- Example Entry -->
+            <!-- Add Entry Form (Admin Only) -->
+            <div id="addEntryForm" class="add-entry-form" style="display: none;">
+                <div class="form-title">✨ Add New Entry ✨</div>
+                <form id="entryForm">
+                    <div class="form-group">
+                        <label class="form-label">Day Number:</label>
+                        <input type="text" class="form-input" id="dayNumber" placeholder="e.g., DAY 313" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Date:</label>
+                        <input type="text" class="form-input" id="entryDate" placeholder="e.g., January 30, 2026" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Entry Content:</label>
+                        <textarea class="form-textarea" id="entryContent" placeholder="Write your dramatic dynasty update here! 💕" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">✨ Add Entry ✨</button>
+                </form>
+            </div>
+            
+            <!-- Entries Display -->
+            <div id="entriesContainer" class="entries-container">
+                <!-- Default entries -->
                 <div class="entry">
                     <div class="entry-header">
                         <div class="entry-day">DAY 312</div>
@@ -467,6 +506,14 @@
     
     <script>
         // ========================================
+        // GITHUB CONFIGURATION (NO TOKEN NEEDED)
+        // ========================================
+        const GITHUB_OWNER = 'ravenjones2912';
+        const DATA_REPO = 'HoregangData';
+        const BRANCH = 'main';
+        const FILE_PATH = 'journal.json';
+        
+        // ========================================
         // LOGIN PROTECTION
         // ========================================
         if (sessionStorage.getItem('dynastyLoggedIn') !== 'true') {
@@ -478,14 +525,33 @@
         // ========================================
         function logout() {
             sessionStorage.removeItem('dynastyLoggedIn');
+            sessionStorage.removeItem('dynastyUser');
             window.location.href = 'index.html';
         }
         
         // ========================================
-        // LOCAL STORAGE OPERATIONS
+        // MODE DETECTION
+        // ========================================
+        const isAdmin = sessionStorage.getItem('dynastyUser') === 'admin';
+        
+        // Update UI based on mode
+        if (isAdmin) {
+            document.getElementById('statusIndicator').className = 'status-indicator status-admin';
+            document.getElementById('statusIndicator').innerHTML = '👑 ADMIN MODE - You can edit and publish to the web!';
+            document.getElementById('publishSection').style.display = 'block';
+            document.getElementById('addEntryForm').style.display = 'block';
+        } else {
+            document.getElementById('statusIndicator').className = 'status-indicator status-visitor';
+            document.getElementById('statusIndicator').innerHTML = '👀 VISITOR MODE - Viewing published content from GitHub';
+        }
+        
+        // ========================================
+        // LOCAL STORAGE OPERATIONS (Admin only)
         // ========================================
         function saveToLocalStorage(entries) {
-            localStorage.setItem('journalEntries', JSON.stringify(entries));
+            if (isAdmin) {
+                localStorage.setItem('journalEntries', JSON.stringify(entries));
+            }
         }
         
         function loadFromLocalStorage() {
@@ -494,10 +560,13 @@
                 try {
                     const entries = JSON.parse(saved);
                     displayEntries(entries);
+                    return true;
                 } catch (error) {
                     console.error('Error loading entries:', error);
+                    return false;
                 }
             }
+            return false;
         }
         
         function getAllEntries() {
@@ -515,6 +584,64 @@
             return entries;
         }
         
+        // ========================================
+        // GITHUB OPERATIONS
+        // ========================================
+        async function loadFromGitHub() {
+            try {
+                const response = await fetch(`https://raw.githubusercontent.com/${GITHUB_OWNER}/${DATA_REPO}/${BRANCH}/${FILE_PATH}`);
+                
+                if (!response.ok) {
+                    console.log('No published data yet, using defaults');
+                    return false;
+                }
+                
+                const data = await response.json();
+                
+                if (data.entries && data.entries.length > 0) {
+                    displayEntries(data.entries);
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Error loading from GitHub:', error);
+                return false;
+            }
+        }
+        
+        function downloadJournalJSON() {
+            if (!isAdmin) {
+                alert('Only admins can download!');
+                return;
+            }
+            
+            try {
+                const entries = getAllEntries();
+                const content = JSON.stringify({ entries: entries }, null, 2);
+                
+                // Download the JSON file
+                const blob = new Blob([content], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'journal.json';
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                // Save to localStorage too
+                saveToLocalStorage(entries);
+                
+                alert('✅ Downloaded journal.json!\n\n📋 Next step: Upload this file to github.com/ravenjones2912/HoregangData');
+                
+            } catch (error) {
+                console.error('Error downloading:', error);
+                alert('❌ Failed to download JSON file');
+            }
+        }
+        
+        // ========================================
+        // DISPLAY ENTRIES
+        // ========================================
         function displayEntries(entries) {
             const container = document.getElementById('entriesContainer');
             container.innerHTML = '';
@@ -532,6 +659,14 @@
             const newEntry = document.createElement('div');
             newEntry.className = 'entry';
             newEntry.style.animation = 'slideIn 0.5s ease';
+            
+            let deleteButtonHTML = '';
+            if (isAdmin) {
+                deleteButtonHTML = `
+                    <button class="delete-entry-btn">🗑️ Delete Entry</button>
+                `;
+            }
+            
             newEntry.innerHTML = `
                 <div class="entry-header">
                     <div class="entry-day">${dayNumber.toUpperCase()}</div>
@@ -540,63 +675,55 @@
                 <div class="entry-content">
                     ${entryContent}
                 </div>
-                <button class="delete-entry-btn" style="
-                    background: linear-gradient(135deg, #ff1493, #ff69b4);
-                    border: 2px solid white;
-                    border-radius: 8px;
-                    padding: 8px 15px;
-                    color: white;
-                    font-size: 0.9em;
-                    font-weight: bold;
-                    margin-top: 10px;
-                    cursor: pointer;
-                    font-family: 'Comic Neue', cursive;
-                    transition: all 0.3s ease;
-                ">🗑️ Delete Entry</button>
+                ${deleteButtonHTML}
             `;
             
-            // Add delete functionality
-            const deleteBtn = newEntry.querySelector('.delete-entry-btn');
-            deleteBtn.onmouseover = function() { this.style.transform = 'scale(1.05)'; };
-            deleteBtn.onmouseout = function() { this.style.transform = 'scale(1)'; };
-            deleteBtn.onclick = async function() {
-                if (confirm('Are you sure you want to delete this entry? 💔')) {
-                    newEntry.style.animation = 'slideOut 0.3s ease';
-                    setTimeout(async () => {
-                        newEntry.remove();
-                        const entries = getAllEntries();
-                        saveToLocalStorage(entries);
-                    }, 300);
-                }
-            };
+            // Add delete functionality (admin only)
+            if (isAdmin) {
+                const deleteBtn = newEntry.querySelector('.delete-entry-btn');
+                deleteBtn.onmouseover = function() { this.style.transform = 'scale(1.05)'; };
+                deleteBtn.onmouseout = function() { this.style.transform = 'scale(1)'; };
+                deleteBtn.onclick = function() {
+                    if (confirm('Are you sure you want to delete this entry? 💔')) {
+                        newEntry.style.animation = 'slideOut 0.3s ease';
+                        setTimeout(() => {
+                            newEntry.remove();
+                            const entries = getAllEntries();
+                            saveToLocalStorage(entries);
+                        }, 300);
+                    }
+                };
+            }
             
             container.insertBefore(newEntry, container.firstChild);
         }
         
         // ========================================
-        // FORM SUBMISSION
+        // FORM SUBMISSION (Admin only)
         // ========================================
-        document.getElementById('entryForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const dayNumber = document.getElementById('dayNumber').value;
-            const entryDate = document.getElementById('entryDate').value;
-            const entryContent = document.getElementById('entryContent').value;
-            
-            // Create new entry element
-            createEntryElement(dayNumber, entryDate, entryContent);
-            
-            // Save all entries
-            const entries = getAllEntries();
-            saveToLocalStorage(entries);
-            
-            // Clear form
-            document.getElementById('entryForm').reset();
-            
-            // Scroll to new entry
-            const container = document.getElementById('entriesContainer');
-            container.firstChild.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
+        if (isAdmin) {
+            document.getElementById('entryForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const dayNumber = document.getElementById('dayNumber').value;
+                const entryDate = document.getElementById('entryDate').value;
+                const entryContent = document.getElementById('entryContent').value;
+                
+                // Create new entry element
+                createEntryElement(dayNumber, entryDate, entryContent);
+                
+                // Save all entries
+                const entries = getAllEntries();
+                saveToLocalStorage(entries);
+                
+                // Clear form
+                document.getElementById('entryForm').reset();
+                
+                // Scroll to new entry
+                const container = document.getElementById('entriesContainer');
+                container.firstChild.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        }
         
         // ========================================
         // FLOATING HEARTS
@@ -643,8 +770,17 @@
         // ========================================
         // LOAD ON PAGE LOAD
         // ========================================
-        window.onload = function() {
-            loadFromLocalStorage();
+        window.onload = async function() {
+            if (isAdmin) {
+                // Admin: try localStorage first, then GitHub
+                const loadedLocal = loadFromLocalStorage();
+                if (!loadedLocal) {
+                    await loadFromGitHub();
+                }
+            } else {
+                // Visitors: always load from GitHub
+                await loadFromGitHub();
+            }
         };
     </script>
 </body>

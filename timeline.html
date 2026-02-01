@@ -670,6 +670,29 @@
     <div class="timeline-container">
         <h1>✨💖 Generational Horegang! 💖✨</h1>
         <div class="subtitle">🦇 Celebrating 523 years of unchecked mental health issues and messy bitches 💅✨</div>
+
+        <!-- Status Indicator -->
+<div id="statusIndicator" style="text-align: center; padding: 15px; margin-bottom: 20px; border-radius: 15px; font-weight: bold; font-size: 1.1em;"></div>
+
+<!-- Publish Button (Admin Only) -->
+<div id="publishSection" style="display: none; text-align: center; margin-bottom: 20px;">
+    <button onclick="downloadTimelineJSON()" style="
+        background: linear-gradient(135deg, #32cd32, #228b22);
+        border: 3px solid white;
+        border-radius: 15px;
+        padding: 18px;
+        color: white;
+        font-size: 1.3em;
+        font-weight: bold;
+        font-family: 'Comic Neue', cursive;
+        cursor: pointer;
+        width: 100%;
+        max-width: 400px;
+    ">📥 Download timeline.json</button>
+    <div style="margin-top: 10px; color: #006400; font-size: 0.9em;">
+        Download, then upload to <a href="https://github.com/ravenjones2912/HoregangData" target="_blank" style="color: #228b22; font-weight: bold;">HoregangData repo</a>
+    </div>
+</div>
         
         <div class="timeline">
             <!-- Year 0 -->
@@ -899,7 +922,21 @@
         </div>
     </div>
     
-    <script>
+ <script>
+
+// ========================================
+// GITHUB CONFIGURATION (NO TOKEN NEEDED)
+// ========================================
+const GITHUB_OWNER = 'ravenjones2912';
+const DATA_REPO = 'HoregangData';
+const BRANCH = 'main';
+const TIMELINE_FILE = 'timeline.json';
+
+// ========================================
+// MODE DETECTION
+// ========================================
+const isAdmin = sessionStorage.getItem('dynastyUser') === 'admin';
+
         // ========================================
         // LOGIN PROTECTION
         // ========================================
@@ -912,6 +949,7 @@
         // ========================================
         function logout() {
             sessionStorage.removeItem('dynastyLoggedIn');
+            sessionStorage.removeItem('dynastyUser');
             window.location.href = 'index.html';
         }
         
@@ -971,6 +1009,12 @@
             document.getElementById('legacy').value = savedNotes.legacy || '';
             document.getElementById('guardianFate').value = savedNotes.guardianFate || '';
             
+            // Hide save button for visitors (Step 7)
+            if (!isAdmin) {
+                const saveBtn = document.querySelector('.save-btn');
+                if (saveBtn) saveBtn.style.display = 'none';
+            }
+            
             // Show modal
             document.getElementById('sacrificeModal').classList.add('show');
         }
@@ -987,7 +1031,7 @@
             }
         });
         
-        // Save sacrifice notes to localStorage
+        // Save sacrifice notes to localStorage (Step 3 - with isAdmin check)
         function saveSacrificeNotes() {
             const notes = {
                 age: document.getElementById('sacrificeAge').value,
@@ -998,7 +1042,9 @@
                 guardianFate: document.getElementById('guardianFate').value
             };
             
-            localStorage.setItem(`sacrifice_${currentSacrificeId}`, JSON.stringify(notes));
+            if (isAdmin) {
+                localStorage.setItem(`sacrifice_${currentSacrificeId}`, JSON.stringify(notes));
+            }
             
             // Show success feedback
             const saveBtn = document.querySelector('.save-btn');
@@ -1018,17 +1064,97 @@
             return saved ? JSON.parse(saved) : {};
         }
         
-        // Create floating hearts
-        setInterval(() => {
-            const heart = document.createElement('div');
-            heart.className = 'heart';
-            heart.innerHTML = ['💖', '✨', '💕', '⭐', '💗'][Math.floor(Math.random() * 5)];
-            heart.style.left = Math.random() * 100 + '%';
-            heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
-            document.body.appendChild(heart);
+        // ========================================
+        // GITHUB OPERATIONS (Steps 4 & 5)
+        // ========================================
+        function downloadTimelineJSON() {
+            if (!isAdmin) {
+                alert('Only admins can download!');
+                return;
+            }
             
-            setTimeout(() => heart.remove(), 10000);
-        }, 500);
+            try {
+                // Collect all sacrifice notes
+                const allNotes = {};
+                for (let i = 1; i <= 29; i++) {
+                    const saved = localStorage.getItem(`sacrifice_${i}`);
+                    if (saved) {
+                        allNotes[`sacrifice_${i}`] = JSON.parse(saved);
+                    }
+                }
+                
+                const content = JSON.stringify({ sacrifices: allNotes }, null, 2);
+                
+                // Download the JSON file
+                const blob = new Blob([content], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'timeline.json';
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                alert('✅ Downloaded timeline.json!\n\n📋 Next step: Upload this file to github.com/ravenjones2912/HoregangData');
+                
+            } catch (error) {
+                console.error('Error downloading:', error);
+                alert('❌ Failed to download JSON file');
+            }
+        }
+        
+        async function loadTimelineFromGitHub() {
+            try {
+                const response = await fetch(`https://raw.githubusercontent.com/${GITHUB_OWNER}/${DATA_REPO}/${BRANCH}/${TIMELINE_FILE}`);
+                
+                if (!response.ok) {
+                    console.log('No published timeline data yet');
+                    return false;
+                }
+                
+                const data = await response.json();
+                
+                if (data.sacrifices) {
+                    // Load all sacrifice notes
+                    for (let key in data.sacrifices) {
+                        localStorage.setItem(key, JSON.stringify(data.sacrifices[key]));
+                    }
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Error loading timeline from GitHub:', error);
+                return false;
+            }
+        }
+        
+        // ========================================
+        // INITIALIZE ON PAGE LOAD (Step 6)
+        // ========================================
+        window.onload = async function() {
+            // Set up UI based on mode
+            if (isAdmin) {
+                document.getElementById('statusIndicator').innerHTML = '👑 ADMIN MODE - You can edit and publish!';
+                document.getElementById('statusIndicator').style.cssText = 'background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 105, 180, 0.3)); border: 3px solid #ffd700; color: #ff1493;';
+                document.getElementById('publishSection').style.display = 'block';
+            } else {
+                document.getElementById('statusIndicator').innerHTML = '👀 VISITOR MODE - Viewing published content';
+                document.getElementById('statusIndicator').style.cssText = 'background: linear-gradient(135deg, rgba(173, 216, 230, 0.3), rgba(144, 238, 144, 0.3)); border: 3px solid #87ceeb; color: #006400;';
+                // For visitors, load from GitHub
+                await loadTimelineFromGitHub();
+            }
+            
+            // Create floating hearts
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = ['💖', '✨', '💕', '⭐', '💗'][Math.floor(Math.random() * 5)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                document.body.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 10000);
+            }, 500);
+        };
     </script>
 </body>
 </html>

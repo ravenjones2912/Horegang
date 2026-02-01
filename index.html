@@ -295,7 +295,7 @@
             if (VALID_USERS[username] && VALID_USERS[username] === password) {
                 // Set session storage to remember login
                 sessionStorage.setItem('dynastyLoggedIn', 'true');
-                sessionStorage.setItem('dynastyUsername', username); // Optional: save username
+                sessionStorage.setItem('dynastyUser', username); // Save username for admin checks
                 
                 // Success feedback
                 const loginBtn = document.querySelector('.login-btn');
