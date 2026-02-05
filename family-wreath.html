@@ -1264,10 +1264,13 @@
                 console.log('👀 Initializing in VISITOR MODE');
                 document.getElementById('statusIndicator').innerHTML = '👀 VISITOR MODE';
                 document.getElementById('statusIndicator').style.cssText = 'background: rgba(144, 238, 144, 0.3); border: 2px solid #90ee90; color: #006400;';
-                // Hide admin-only buttons for visitors
-                document.getElementById('addSimBtn').style.display = 'none';
-                document.getElementById('edit-mode-btn').style.display = 'none';
-                document.getElementById('saveLoadBtn').style.display = 'none';
+                
+                // Hide admin-only buttons for visitors (only if they exist)
+                const addSimBtn = document.getElementById('addSimBtn');
+                if (addSimBtn) addSimBtn.style.display = 'none';
+                
+                const editModeBtn = document.getElementById('edit-mode-btn');
+                if (editModeBtn) editModeBtn.style.display = 'none';
                 
                 // Load from GitHub for visitors
                 const loaded = await loadFamilyFromGitHub();
