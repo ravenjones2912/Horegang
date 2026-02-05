@@ -1242,6 +1242,7 @@
         async function init() {
             // Initialize based on mode
             if (isAdmin) {
+                console.log('👑 Initializing in ADMIN MODE');
                 document.getElementById('statusIndicator').innerHTML = '👑 ADMIN MODE';
                 document.getElementById('statusIndicator').style.cssText = 'background: rgba(255, 215, 0, 0.3); border: 2px solid #ffd700; color: #ff1493;';
                 document.getElementById('publishBtn').style.display = 'block';
@@ -1255,10 +1256,12 @@
                 // Admin: Load from GitHub to see published version (same as visitors)
                 const loaded = await loadFamilyFromGitHub();
                 if (!loaded) {
+                    console.log('⚠️ GitHub load failed, loading from localStorage...');
                     // If no published version, load defaults
                     loadFromStorage();
                 }
             } else {
+                console.log('👀 Initializing in VISITOR MODE');
                 document.getElementById('statusIndicator').innerHTML = '👀 VISITOR MODE';
                 document.getElementById('statusIndicator').style.cssText = 'background: rgba(144, 238, 144, 0.3); border: 2px solid #90ee90; color: #006400;';
                 // Hide admin-only buttons for visitors
@@ -1269,10 +1272,14 @@
                 // Load from GitHub for visitors
                 const loaded = await loadFamilyFromGitHub();
                 if (!loaded) {
+                    console.log('⚠️ GitHub load failed, loading from localStorage...');
                     // If no published version, load defaults
                     loadFromStorage();
                 }
             }
+            
+            console.log('📊 Final family data:', familyData);
+            console.log('👥 Number of people:', familyData.people?.length || 0);
             
             setupEventListeners();
             centerView();
@@ -2158,24 +2165,34 @@
         // GITHUB FUNCTIONS
         // ============================================
         async function loadFamilyFromGitHub() {
+            const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${DATA_REPO}/${BRANCH}/${FAMILY_FILE}`;
+            console.log('🔄 Attempting to load from:', url);
+            
             try {
-                const response = await fetch(`https://raw.githubusercontent.com/${GITHUB_OWNER}/${DATA_REPO}/${BRANCH}/${FAMILY_FILE}`);
+                const response = await fetch(url);
+                
+                console.log('📡 Response status:', response.status, response.statusText);
                 
                 if (!response.ok) {
-                    console.log('No published family tree yet');
+                    console.log('⚠️ No published family tree yet (status:', response.status, ')');
+                    console.log('💡 Tip: Make sure family-wreath.json is uploaded to:', url);
                     return false;
                 }
                 
                 const data = await response.json();
+                console.log('✅ Data loaded from GitHub:', data);
                 
                 if (validateFamilyData(data)) {
                     familyData = data;
+                    console.log('✅ Family data validated and loaded!');
                     render();
                     return true;
                 }
+                console.log('❌ Data validation failed');
                 return false;
             } catch (error) {
-                console.error('Error loading family tree from GitHub:', error);
+                console.error('❌ Error loading family tree from GitHub:', error);
+                console.log('💡 Check that the repo exists at: https://github.com/' + GITHUB_OWNER + '/' + DATA_REPO);
                 return false;
             }
         }
