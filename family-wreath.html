@@ -206,6 +206,7 @@
                 0 8px 32px rgba(255, 20, 147, 0.4),
                 inset 0 0 20px rgba(255, 255, 255, 0.3);
             user-select: none;
+            z-index: 10; /* Keep sim cards above relationship lines */
         }
 
         .sim-node:hover {
@@ -990,9 +991,11 @@
             <button onclick="window.location.href='home.html'">🏠 Home</button>
             <button id="addSimBtn" onclick="addNewSim()">➕ Add a Sim</button>
             <button id="edit-mode-btn" onclick="toggleEditMode()">✏️ Edit Mode</button>
+            <button id="ruler-btn" onclick="toggleRuler()" style="display: none;">📏 Ruler</button>
+            <button id="emoji-btn" onclick="toggleEmojiPicker()" style="display: none;">💕 Add Emoji</button>
+            <button id="pen-btn" onclick="togglePenTool()" style="display: none;">✏️ Pen Tool</button>
             <button onclick="resetView()">🔄 Reset View</button>
             <button onclick="fitToScreen()">📐 Fit All</button>
-            <button id="saveLoadBtn" onclick="showExportImport()">💾 Save/Load</button>
             <button onclick="logout()" style="margin-top: auto;">🔒 Logout</button>
         </div>
 
@@ -1021,6 +1024,80 @@
                 <div class="minimap-viewport" id="minimap-viewport"></div>
             </div>
         </div>
+    </div>
+
+    <!-- Drawing Canvas Layer (for pen tool) -->
+    <canvas id="drawing-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 5;"></canvas>
+
+    <!-- Custom Connector Lines (SVG overlay so lines move with cards) -->
+    <svg id="custom-lines-svg" style="position: absolute; top: 0; left: 200px; width: calc(100vw - 200px); height: 100vh; pointer-events: none; z-index: 4;"></svg>
+
+    <!-- Ruler Tool -->
+    <div id="ruler" style="display: none; position: absolute; width: 400px; height: 40px; background: rgba(255, 192, 203, 0.9); border: 3px solid #ff69b4; border-radius: 8px; z-index: 100; box-shadow: 0 4px 15px rgba(255, 105, 180, 0.6); pointer-events: auto;">
+        <div id="ruler-body" style="display: flex; justify-content: space-between; align-items: center; height: 100%; padding: 0 10px; cursor: move;">
+            <div style="flex: 1; display: flex; justify-content: space-between; font-size: 10px; color: #ff1493; font-weight: bold; pointer-events: none;">
+                <span>|</span><span>|</span><span>|</span><span>|</span><span>|</span><span>|</span><span>|</span><span>|</span><span>|</span><span>|</span>
+            </div>
+            <button onclick="rotateRuler()" style="background: #ff69b4; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-left: 10px; pointer-events: auto;">↻ Rotate</button>
+            <button onclick="closeRuler()" style="background: #ff1493; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-left: 5px; pointer-events: auto;">×</button>
+        </div>
+    </div>
+
+    <!-- Emoji Picker -->
+    <div id="emoji-picker" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, rgba(255, 192, 203, 0.98), rgba(255, 240, 245, 0.98)); border: 4px solid #ff69b4; border-radius: 20px; padding: 30px; z-index: 1000; box-shadow: 0 10px 40px rgba(255, 20, 147, 0.6);">
+        <h3 style="color: #ff1493; text-align: center; margin-bottom: 20px; font-family: 'Comic Neue', cursive;">💕 Choose an Emoji</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+            <button onclick="addEmoji('❤️')" style="font-size: 48px; background: white; border: 3px solid #ff69b4; border-radius: 15px; padding: 20px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">❤️</button>
+            <button onclick="addEmoji('💔')" style="font-size: 48px; background: white; border: 3px solid #ff69b4; border-radius: 15px; padding: 20px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">💔</button>
+            <button onclick="addEmoji('❤️‍🔥')" style="font-size: 48px; background: white; border: 3px solid #ff69b4; border-radius: 15px; padding: 20px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">❤️‍🔥</button>
+        </div>
+        <button onclick="closeEmojiPicker()" style="width: 100%; background: linear-gradient(135deg, #ff69b4, #ff1493); border: none; color: white; padding: 12px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; font-family: 'Comic Neue', cursive;">Close</button>
+    </div>
+
+    <!-- Pen Tool Panel -->
+    <div id="pen-tool-panel" style="display: none; position: fixed; top: 80px; left: 180px; background: linear-gradient(135deg, rgba(255, 192, 203, 0.98), rgba(255, 240, 245, 0.98)); border: 4px solid #ff69b4; border-radius: 20px; padding: 30px; z-index: 1000; box-shadow: 0 10px 40px rgba(255, 20, 147, 0.6); min-width: 300px; cursor: move;">
+        <h3 style="color: #ff1493; text-align: center; margin-bottom: 20px; font-family: 'Comic Neue', cursive;">✏️ Pen Tool</h3>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="color: #ff1493; font-weight: bold; display: block; margin-bottom: 8px;">Pen Type:</label>
+            <select id="pen-type" onchange="updatePenType()" style="width: 100%; padding: 10px; border: 2px solid #ff69b4; border-radius: 8px; font-family: 'Comic Neue', cursive; background: white;">
+                <option value="solid">Solid Line</option>
+                <option value="dashed">Dashed Line</option>
+                <option value="dotted">Dotted Line</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="color: #ff1493; font-weight: bold; display: block; margin-bottom: 8px;">Line Width:</label>
+            <input type="range" id="pen-width" min="1" max="10" value="3" onchange="updatePenWidth()" style="width: 100%;">
+            <span id="pen-width-display" style="color: #ff1493; font-size: 14px;">3px</span>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="color: #ff1493; font-weight: bold; display: block; margin-bottom: 8px;">Color:</label>
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;">
+                <button onclick="setPenColor('#000000')" style="width: 40px; height: 40px; background: #000000; border: 3px solid #ff69b4; border-radius: 8px; cursor: pointer;"></button>
+                <button onclick="setPenColor('#ff1493')" style="width: 40px; height: 40px; background: #ff1493; border: 3px solid #ff69b4; border-radius: 8px; cursor: pointer;"></button>
+                <button onclick="setPenColor('#ff69b4')" style="width: 40px; height: 40px; background: #ff69b4; border: 3px solid #ff69b4; border-radius: 8px; cursor: pointer;"></button>
+                <button onclick="setPenColor('#ffd700')" style="width: 40px; height: 40px; background: #ffd700; border: 3px solid #ff69b4; border-radius: 8px; cursor: pointer;"></button>
+                <button onclick="setPenColor('#ffffff')" style="width: 40px; height: 40px; background: #ffffff; border: 3px solid #ff69b4; border-radius: 8px; cursor: pointer;"></button>
+                <button onclick="setPenColor('#0000ff')" style="width: 40px; height: 40px; background: #0000ff; border: 3px solid #ff69b4; border-radius: 8px; cursor: pointer;"></button>
+                <button onclick="setPenColor('#00ff00')" style="width: 40px; height: 40px; background: #00ff00; border: 3px solid #ff69b4; border-radius: 8px; cursor: pointer;"></button>
+                <button onclick="setPenColor('#ff0000')" style="width: 40px; height: 40px; background: #ff0000; border: 3px solid #ff69b4; border-radius: 8px; cursor: pointer;"></button>
+                <button onclick="setPenColor('#800080')" style="width: 40px; height: 40px; background: #800080; border: 3px solid #ff69b4; border-radius: 8px; cursor: pointer;"></button>
+                <button onclick="setPenColor('#ffa500')" style="width: 40px; height: 40px; background: #ffa500; border: 3px solid #ff69b4; border-radius: 8px; cursor: pointer;"></button>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button id="draw-btn" onclick="startDrawing()" style="flex: 1; background: linear-gradient(135deg, #32cd32, #228b22); border: none; color: white; padding: 12px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; font-family: 'Comic Neue', cursive;">✏️ Draw</button>
+            <button id="erase-btn" onclick="startErasing()" style="flex: 1; background: linear-gradient(135deg, #ffa500, #ff8c00); border: none; color: white; padding: 12px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; font-family: 'Comic Neue', cursive;">🧹 Erase</button>
+            <button onclick="clearAllDrawings()" style="flex: 1; background: linear-gradient(135deg, #ff1493, #dc143c); border: none; color: white; padding: 12px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; font-family: 'Comic Neue', cursive;">🗑️ Clear All</button>
+        </div>
+        
+        <button id="remove-connector-btn" onclick="toggleRemoveConnectorMode()" style="width: 100%; margin-top: 10px; background: linear-gradient(135deg, #dc143c, #8b0000); border: none; color: white; padding: 12px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; font-family: 'Comic Neue', cursive;">🔗❌ Remove Connector Lines</button>
+        
+        <button onclick="closePenTool()" style="width: 100%; margin-top: 10px; background: linear-gradient(135deg, #ff69b4, #ff1493); border: none; color: white; padding: 12px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; font-family: 'Comic Neue', cursive;">Close</button>
     </div>
 
     <!-- Character Card Modal -->
@@ -1170,6 +1247,11 @@
                 document.getElementById('publishBtn').style.display = 'block';
                 document.getElementById('publishHint').style.display = 'block';
                 
+                // Show drawing tools for admin
+                document.getElementById('ruler-btn').style.display = 'block';
+                document.getElementById('emoji-btn').style.display = 'block';
+                document.getElementById('pen-btn').style.display = 'block';
+                
                 // Admin: Load from GitHub to see published version (same as visitors)
                 const loaded = await loadFamilyFromGitHub();
                 if (!loaded) {
@@ -1262,6 +1344,7 @@
             renderNodes();
             renderRelationships();
             updateTransform();
+            renderCustomLines();
             updateMinimap();
         }
 
@@ -1349,85 +1432,17 @@
         }
 
         function renderRelationships() {
-            const svg = document.getElementById('relationship-svg');
-            svg.innerHTML = '';
-            svg.setAttribute('width', '10000');
-            svg.setAttribute('height', '10000');
-
-            const drawnLines = new Set();
-
-            // Draw parent-child relationships
-            familyData.relationships.forEach(rel => {
-                if (rel.type === 'parent') {
-                    const parent = familyData.people.find(p => p.id === rel.from);
-                    const child = familyData.people.find(p => p.id === rel.to);
-                    if (!parent || !child) return;
-
-                    const lineId = `${rel.from}-${rel.to}`;
-                    if (drawnLines.has(lineId)) return;
-                    drawnLines.add(lineId);
-
-                    const parentPos = familyData.layout.positions[rel.from];
-                    const childPos = familyData.layout.positions[rel.to];
-                    
-                    // Connect from bottom edge of parent to top edge of child
-                    const x1 = parentPos.x + 90;
-                    const y1 = parentPos.y + 130; // Bottom edge of parent card
-                    const x2 = childPos.x + 90;
-                    const y2 = childPos.y; // Top edge of child card
-
-                    const midY = (y1 + y2) / 2;
-
-                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                    path.setAttribute('d', `M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2}`);
-                    path.classList.add('relationship-line', 'parent');
-                    if (rel.kind === 'adoptive') {
-                        path.classList.add('adoptive');
-                    }
-                    svg.appendChild(path);
-                }
-            });
-
-            // Draw partner relationships
-            const partnerPairs = new Set();
-            familyData.relationships.forEach(rel => {
-                if (rel.type === 'partner') {
-                    const p1 = familyData.people.find(p => p.id === rel.from);
-                    const p2 = familyData.people.find(p => p.id === rel.to);
-                    if (!p1 || !p2) return;
-
-                    const pairId = [rel.from, rel.to].sort().join('-');
-                    if (partnerPairs.has(pairId)) return;
-                    partnerPairs.add(pairId);
-
-                    const pos1 = familyData.layout.positions[rel.from];
-                    const pos2 = familyData.layout.positions[rel.to];
-
-                    // Determine which node is on the left
-                    const leftPos = pos1.x < pos2.x ? pos1 : pos2;
-                    const rightPos = pos1.x < pos2.x ? pos2 : pos1;
-
-                    // Connect right edge of left card to left edge of right card
-                    const x1 = leftPos.x + 180; // Right edge of left card
-                    const y1 = leftPos.y + 65; // Middle height
-                    const x2 = rightPos.x; // Left edge of right card
-                    const y2 = rightPos.y + 65; // Middle height
-
-                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    line.setAttribute('x1', x1);
-                    line.setAttribute('y1', y1);
-                    line.setAttribute('x2', x2);
-                    line.setAttribute('y2', y2);
-                    line.classList.add('relationship-line', 'partner');
-                    svg.appendChild(line);
-                }
-            });
+            // Automatic line generation disabled - user draws their own lines!
+            // Lines drawn manually are stored separately in familyData.customDrawings
+            return;
         }
 
         function updateTransform() {
             const canvas = document.getElementById('canvas');
             canvas.style.transform = `translate(${state.translateX}px, ${state.translateY}px) scale(${state.scale})`;
             document.getElementById('zoom-level').textContent = `${Math.round(state.scale * 100)}%`;
+            // Keep connector lines stuck to cards during pan/zoom
+            renderCustomLines();
         }
 
         // ============================================
@@ -2111,6 +2126,9 @@
             if (!event || event.target.id === 'edit-modal') {
                 document.getElementById('edit-modal').classList.remove('show');
                 state.currentEditingId = null;
+                uploadedPortraitData = null; // Clear the uploaded image data
+                document.getElementById('portrait-filename').textContent = '';
+                document.getElementById('portrait-preview').innerHTML = '';
             }
         }
 
@@ -2118,7 +2136,9 @@
         // SAVE/LOAD
         // ============================================
         function saveToStorage() {
-            if (isAdmin) {
+            // Admin users don't use localStorage - they download JSON instead
+            // This prevents QuotaExceededError from large base64 images
+            if (!isAdmin) {
                 localStorage.setItem('familywreathData', JSON.stringify(familyData));
             }
         }
@@ -2324,6 +2344,633 @@
         // INITIALIZATION
         // ============================================
         window.addEventListener('load', init);
+
+        // ============================================
+        // DRAWING TOOLS - RULER, EMOJI, PEN
+        // ============================================
+        
+        // Drawing state
+        const drawingState = {
+            penActive: false,
+            eraseMode: false,
+            penColor: '#ff1493',
+            penWidth: 3,
+            penType: 'solid',
+            isDrawing: false,
+            lastX: 0,
+            lastY: 0,
+            rulerRotation: 0,
+            connectorDraft: null
+        };
+
+        // Drawing canvas setup
+        const drawingCanvas = document.getElementById('drawing-canvas');
+        const drawingCtx = drawingCanvas.getContext('2d');
+
+        function resizeDrawingCanvas() {
+            const container = document.getElementById('canvas-container');
+            drawingCanvas.width = container.offsetWidth;
+            drawingCanvas.height = container.offsetHeight;
+        }
+        resizeDrawingCanvas();
+        window.addEventListener('resize', resizeDrawingCanvas);
+
+        // Custom connector lines (stored as data so they move with sim cards)
+        const customLinesSvg = document.getElementById('custom-lines-svg');
+
+        function ensureCustomLinesArray() {
+            if (!familyData.customLines) familyData.customLines = [];
+        }
+
+        function resizeCustomLinesSvg() {
+            const container = document.getElementById('canvas-container');
+            const rect = container.getBoundingClientRect();
+            customLinesSvg.style.left = rect.left + 'px';
+            customLinesSvg.style.top = rect.top + 'px';
+            customLinesSvg.style.width = rect.width + 'px';
+            customLinesSvg.style.height = rect.height + 'px';
+            customLinesSvg.setAttribute('width', rect.width);
+            customLinesSvg.setAttribute('height', rect.height);
+        }
+        resizeCustomLinesSvg();
+        window.addEventListener('resize', resizeCustomLinesSvg);
+
+        function getNodeAnchorFromClientPoint(clientX, clientY, thresholdPx = 28) {
+            // Returns { id, anchor:{u,v}, point:{x,y} } in CONTAINER-relative coords, or null
+            const containerRect = document.getElementById('canvas-container').getBoundingClientRect();
+            const nodes = document.querySelectorAll('.sim-node');
+            let best = null;
+
+            nodes.forEach(node => {
+                const r = node.getBoundingClientRect();
+
+                // Closest point on rect to pointer
+                const closestX = Math.max(r.left, Math.min(clientX, r.right));
+                const closestY = Math.max(r.top, Math.min(clientY, r.bottom));
+
+                const dx = clientX - closestX;
+                const dy = clientY - closestY;
+                const dist = Math.hypot(dx, dy);
+
+                if (dist <= thresholdPx && (!best || dist < best.dist)) {
+                    // Determine nearest EDGE point (top/bottom/left/right) for stable anchors
+                    const dTop = Math.abs(closestY - r.top);
+                    const dBottom = Math.abs(r.bottom - closestY);
+                    const dLeft = Math.abs(closestX - r.left);
+                    const dRight = Math.abs(r.right - closestX);
+
+                    let edgeX = closestX;
+                    let edgeY = closestY;
+
+                    const minEdge = Math.min(dTop, dBottom, dLeft, dRight);
+                    if (minEdge === dTop) edgeY = r.top;
+                    else if (minEdge === dBottom) edgeY = r.bottom;
+                    else if (minEdge === dLeft) edgeX = r.left;
+                    else edgeX = r.right;
+
+                    const u = (edgeX - r.left) / r.width;
+                    const v = (edgeY - r.top) / r.height;
+
+                    best = {
+                        id: node.dataset.personId,
+                        anchor: { u: Math.max(0, Math.min(1, u)), v: Math.max(0, Math.min(1, v)) },
+                        point: { x: edgeX - containerRect.left, y: edgeY - containerRect.top },
+                        dist
+                    };
+                }
+            });
+
+            return best ? { id: best.id, anchor: best.anchor, point: best.point } : null;
+        }
+
+        function getAnchorPointForPerson(personId, anchor) {
+            // Returns container-relative coords
+            const node = document.getElementById(`node-${personId}`);
+            if (!node) return null;
+            const containerRect = document.getElementById('canvas-container').getBoundingClientRect();
+            const r = node.getBoundingClientRect();
+            return {
+                x: (r.left - containerRect.left) + anchor.u * r.width,
+                y: (r.top - containerRect.top) + anchor.v * r.height
+            };
+        }
+
+        function renderCustomLines(previewLine = null) {
+            ensureCustomLinesArray();
+            resizeCustomLinesSvg();
+
+            // Clear and redraw
+            while (customLinesSvg.firstChild) customLinesSvg.removeChild(customLinesSvg.firstChild);
+
+            const drawLine = (a, b, style, lineId = null) => {
+                const el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                el.setAttribute('x1', a.x);
+                el.setAttribute('y1', a.y);
+                el.setAttribute('x2', b.x);
+                el.setAttribute('y2', b.y);
+                el.setAttribute('stroke', style?.color || '#ff1493');
+                el.setAttribute('stroke-width', style?.width || 3);
+                el.setAttribute('stroke-linecap', 'round');
+
+                if (style?.dash && Array.isArray(style.dash) && style.dash.length) {
+                    el.setAttribute('stroke-dasharray', style.dash.join(','));
+                }
+
+                // If in remove mode, make the line clickable with a thicker invisible hitbox
+                if (removeConnectorModeActive && lineId) {
+                    // Create invisible wider line for easier clicking
+                    const hitbox = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    hitbox.setAttribute('x1', a.x);
+                    hitbox.setAttribute('y1', a.y);
+                    hitbox.setAttribute('x2', b.x);
+                    hitbox.setAttribute('y2', b.y);
+                    hitbox.setAttribute('stroke', 'transparent');
+                    hitbox.setAttribute('stroke-width', Math.max((style?.width || 3) * 3, 15)); // Make hitbox wider
+                    hitbox.setAttribute('stroke-linecap', 'round');
+                    hitbox.style.cursor = 'pointer';
+                    hitbox.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        if (confirm('Delete this connector line?')) {
+                            familyData.customLines = familyData.customLines.filter(l => l.id !== lineId);
+                            saveToStorage();
+                            renderCustomLines();
+                        }
+                    });
+                    
+                    // Add hover effect
+                    hitbox.addEventListener('mouseenter', function() {
+                        el.setAttribute('stroke', '#ff0000');
+                        el.setAttribute('stroke-width', (style?.width || 3) * 1.5);
+                    });
+                    hitbox.addEventListener('mouseleave', function() {
+                        el.setAttribute('stroke', style?.color || '#ff1493');
+                        el.setAttribute('stroke-width', style?.width || 3);
+                    });
+                    
+                    customLinesSvg.appendChild(hitbox);
+                }
+
+                customLinesSvg.appendChild(el);
+            };
+
+            familyData.customLines.forEach(line => {
+                const a = getAnchorPointForPerson(line.fromId, line.fromAnchor);
+                const b = getAnchorPointForPerson(line.toId, line.toAnchor);
+                if (!a || !b) return;
+                drawLine(a, b, line.style, line.id);
+            });
+
+            if (previewLine) {
+                drawLine(previewLine.a, previewLine.b, previewLine.style || { color: drawingState.penColor, width: drawingState.penWidth });
+            }
+        }
+
+        // ========== RULER TOOL (PROJECTION-BASED) ==========
+        let rulerDragging = false;
+        let rulerOffsetX = 0;
+        let rulerOffsetY = 0;
+        let rulerCenterX = 0; // Ruler center in page coordinates
+        let rulerCenterY = 0;
+
+        function toggleRuler() {
+            const ruler = document.getElementById('ruler');
+            if (ruler.style.display === 'none') {
+                ruler.style.display = 'block';
+                // Position at center of viewport
+                const containerRect = document.getElementById('canvas-container').getBoundingClientRect();
+                rulerCenterX = containerRect.left + containerRect.width / 2;
+                rulerCenterY = containerRect.top + containerRect.height / 2;
+                ruler.style.left = rulerCenterX + 'px';
+                ruler.style.top = rulerCenterY + 'px';
+                ruler.style.transform = 'translate(-50%, -50%)';
+                drawingState.rulerRotation = 0;
+                updateRulerState();
+            } else {
+                ruler.style.display = 'none';
+            }
+        }
+
+        function rotateRuler() {
+            drawingState.rulerRotation = (drawingState.rulerRotation + 15) % 360;
+            const ruler = document.getElementById('ruler');
+            ruler.style.transform = `translate(-50%, -50%) rotate(${drawingState.rulerRotation}deg)`;
+            updateRulerState();
+        }
+
+        function closeRuler() {
+            document.getElementById('ruler').style.display = 'none';
+        }
+
+        function updateRulerState() {
+            // Store ruler center and angle for projection calculations
+            const ruler = document.getElementById('ruler');
+            const rect = ruler.getBoundingClientRect();
+            rulerCenterX = rect.left + rect.width / 2;
+            rulerCenterY = rect.top + rect.height / 2;
+        }
+
+        // Ruler dragging - using pointer events for better touch support
+        const rulerBody = document.getElementById('ruler-body');
+        rulerBody.addEventListener('pointerdown', function(e) {
+            if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+                rulerDragging = true;
+                const ruler = document.getElementById('ruler');
+                const rect = ruler.getBoundingClientRect();
+                rulerOffsetX = e.clientX - (rect.left + rect.width / 2);
+                rulerOffsetY = e.clientY - (rect.top + rect.height / 2);
+                ruler.setPointerCapture(e.pointerId);
+            }
+        });
+
+        document.addEventListener('pointermove', function(e) {
+            if (rulerDragging) {
+                const ruler = document.getElementById('ruler');
+                rulerCenterX = e.clientX - rulerOffsetX;
+                rulerCenterY = e.clientY - rulerOffsetY;
+                ruler.style.left = rulerCenterX + 'px';
+                ruler.style.top = rulerCenterY + 'px';
+                ruler.style.transform = `translate(-50%, -50%) rotate(${drawingState.rulerRotation}deg)`;
+            }
+        });
+
+        document.addEventListener('pointerup', function() {
+            rulerDragging = false;
+        });
+
+        // ========== PROJECTION MATH ==========
+        function projectPointOntoRuler(x, y) {
+            // Project a screen-space point onto the TOP edge of the ruler (Snipping Tool style)
+            // Uses rulerCenterX/Y (screen coords) and drawingState.rulerRotation (deg)
+
+            // Convert rotation to radians
+            const angleRad = (drawingState.rulerRotation * Math.PI) / 180;
+
+            // Direction vector along the ruler
+            const dirX = Math.cos(angleRad);
+            const dirY = Math.sin(angleRad);
+
+            // "Up" normal (perpendicular)
+            const nX = -dirY;
+            const nY = dirX;
+
+            // Offset the projection line from the ruler center to the TOP edge
+            const rulerRect = document.getElementById('ruler').getBoundingClientRect();
+            const edgeOffset = -rulerRect.height / 2; // flip sign if you want bottom edge instead
+            const ax = rulerCenterX + nX * edgeOffset;
+            const ay = rulerCenterY + nY * edgeOffset;
+
+            // Project (x,y) onto the infinite line through (ax,ay) in direction (dirX,dirY)
+            const apX = x - ax;
+            const apY = y - ay;
+            const t = apX * dirX + apY * dirY;
+
+            return { x: ax + t * dirX, y: ay + t * dirY };
+        }
+
+        function isRulerActive() {
+            return document.getElementById('ruler').style.display !== 'none';
+        }
+
+        // ========== EMOJI TOOL ==========
+        function toggleEmojiPicker() {
+            const picker = document.getElementById('emoji-picker');
+            picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function closeEmojiPicker() {
+            document.getElementById('emoji-picker').style.display = 'none';
+        }
+
+        function addEmoji(emoji) {
+            // Create draggable emoji element
+            const emojiEl = document.createElement('div');
+            emojiEl.textContent = emoji;
+            emojiEl.className = 'draggable-emoji';
+            emojiEl.style.cssText = `
+                position: absolute;
+                font-size: 48px;
+                cursor: move;
+                z-index: 50;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                user-select: none;
+            `;
+            
+            // Make it draggable
+            let isDragging = false;
+            let offsetX = 0;
+            let offsetY = 0;
+            
+            const onMouseDown = function(e) {
+                isDragging = true;
+                const rect = emojiEl.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+                emojiEl.style.zIndex = 100;
+                e.preventDefault();
+            };
+
+            const onMouseMove = function(e) {
+                if (isDragging) {
+                    emojiEl.style.left = (e.clientX - offsetX) + 'px';
+                    emojiEl.style.top = (e.clientY - offsetY) + 'px';
+                    emojiEl.style.transform = 'none';
+                }
+            };
+
+            const onMouseUp = function() {
+                if (isDragging) {
+                    isDragging = false;
+                    emojiEl.style.zIndex = 50;
+                }
+            };
+            
+            emojiEl.addEventListener('mousedown', onMouseDown);
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+
+            // Double-click to delete
+            emojiEl.addEventListener('dblclick', function() {
+                if (confirm('Delete this emoji?')) {
+                    emojiEl.remove();
+                }
+            });
+
+            document.getElementById('canvas-container').appendChild(emojiEl);
+            closeEmojiPicker();
+        }
+
+        // ========== PEN TOOL ==========
+        function togglePenTool() {
+            const panel = document.getElementById('pen-tool-panel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            
+            // Make panel draggable
+            if (!panel.hasAttribute('data-draggable-init')) {
+                let isDragging = false;
+                let offsetX = 0;
+                let offsetY = 0;
+                
+                panel.addEventListener('mousedown', function(e) {
+                    // Only drag if clicking the panel background, not buttons/inputs
+                    if (e.target === panel || e.target.tagName === 'H3' || e.target.tagName === 'LABEL') {
+                        isDragging = true;
+                        offsetX = e.clientX - panel.offsetLeft;
+                        offsetY = e.clientY - panel.offsetTop;
+                    }
+                });
+                
+                document.addEventListener('mousemove', function(e) {
+                    if (isDragging) {
+                        panel.style.left = (e.clientX - offsetX) + 'px';
+                        panel.style.top = (e.clientY - offsetY) + 'px';
+                    }
+                });
+                
+                document.addEventListener('mouseup', function() {
+                    isDragging = false;
+                });
+                
+                panel.setAttribute('data-draggable-init', 'true');
+            }
+        }
+
+        function closePenTool() {
+            document.getElementById('pen-tool-panel').style.display = 'none';
+            stopDrawing();
+        }
+
+        function updatePenType() {
+            drawingState.penType = document.getElementById('pen-type').value;
+        }
+
+        function updatePenWidth() {
+            drawingState.penWidth = document.getElementById('pen-width').value;
+            document.getElementById('pen-width-display').textContent = drawingState.penWidth + 'px';
+        }
+
+        function setPenColor(color) {
+            drawingState.penColor = color;
+        }
+
+        function getDashArrayForPenType() {
+            if (drawingState.penType === 'dashed') return [10, 5];
+            if (drawingState.penType === 'dotted') return [2, 3];
+            return [];
+        }
+
+
+        function startDrawing() {
+            drawingState.penActive = true;
+            drawingState.eraseMode = false;
+            drawingCanvas.style.pointerEvents = 'auto';
+            drawingCanvas.style.cursor = 'crosshair';
+            document.getElementById('draw-btn').style.background = 'linear-gradient(135deg, #228b22, #006400)';
+            document.getElementById('erase-btn').style.background = 'linear-gradient(135deg, #ffa500, #ff8c00)';
+        }
+
+        function startErasing() {
+            drawingState.penActive = true;
+            drawingState.eraseMode = true;
+            drawingCanvas.style.pointerEvents = 'auto';
+            drawingCanvas.style.cursor = 'grab';
+            document.getElementById('draw-btn').style.background = 'linear-gradient(135deg, #32cd32, #228b22)';
+            document.getElementById('erase-btn').style.background = 'linear-gradient(135deg, #ff8c00, #ff6600)';
+        }
+
+        function stopDrawing() {
+            drawingState.penActive = false;
+            drawingState.eraseMode = false;
+            drawingCanvas.style.pointerEvents = 'none';
+            drawingCanvas.style.cursor = 'default';
+            drawingState.isDrawing = false;
+            document.getElementById('draw-btn').style.background = 'linear-gradient(135deg, #32cd32, #228b22)';
+            document.getElementById('erase-btn').style.background = 'linear-gradient(135deg, #ffa500, #ff8c00)';
+            drawingState.removeConnectorMode = false;
+            document.getElementById('remove-connector-btn').style.background = 'linear-gradient(135deg, #dc143c, #8b0000)';
+            const svg = document.getElementById('custom-lines-svg');
+            svg.style.pointerEvents = 'none';
+        }
+
+        // State for remove connector mode
+        let removeConnectorModeActive = false;
+
+        function toggleRemoveConnectorMode() {
+            removeConnectorModeActive = !removeConnectorModeActive;
+            const btn = document.getElementById('remove-connector-btn');
+            const svg = document.getElementById('custom-lines-svg');
+            
+            if (removeConnectorModeActive) {
+                // Stop any other drawing modes
+                stopDrawing();
+                
+                // Activate remove mode
+                btn.style.background = 'linear-gradient(135deg, #8b0000, #dc143c)';
+                btn.style.transform = 'scale(1.05)';
+                svg.style.pointerEvents = 'auto';
+                svg.style.cursor = 'pointer';
+                
+                // Re-render lines with clickable option
+                renderCustomLines();
+            } else {
+                // Deactivate remove mode
+                btn.style.background = 'linear-gradient(135deg, #dc143c, #8b0000)';
+                btn.style.transform = 'scale(1)';
+                svg.style.pointerEvents = 'none';
+                svg.style.cursor = 'default';
+                
+                // Re-render lines without clickable option
+                renderCustomLines();
+            }
+        }
+
+        function clearAllDrawings() {
+            if (confirm('Clear all drawings?')) {
+                drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+            }
+        }
+
+        // Drawing event listeners with ruler projection support
+        drawingCanvas.addEventListener('pointerdown', function(e) {
+            if (!drawingState.penActive) return;
+
+            // If ruler is active (and we're drawing, not erasing), allow "connector line" creation:
+            // Start/end snap to sim cards, and the line will move with them.
+            if (isRulerActive() && !drawingState.eraseMode) {
+                ensureCustomLinesArray();
+
+                const projectedScreen = projectPointOntoRuler(e.clientX, e.clientY);
+                const startHit = getNodeAnchorFromClientPoint(projectedScreen.x, projectedScreen.y);
+
+                if (startHit) {
+                    drawingState.connectorDraft = {
+                        fromId: startHit.id,
+                        fromAnchor: startHit.anchor
+                    };
+
+                    // Show an initial preview (zero-length)
+                    const a = getAnchorPointForPerson(startHit.id, startHit.anchor);
+                    renderCustomLines({ a, b: a, style: { color: drawingState.penColor, width: drawingState.penWidth, dash: getDashArrayForPenType() } });
+
+                    drawingCanvas.setPointerCapture(e.pointerId);
+                    return; // do not start freehand canvas drawing
+                }
+            }
+
+            // Otherwise: normal freehand drawing (optionally projected onto ruler)
+            drawingState.isDrawing = true;
+
+            const rect = drawingCanvas.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+
+            if (isRulerActive() && !drawingState.eraseMode) {
+                const projected = projectPointOntoRuler(e.clientX, e.clientY);
+                x = projected.x - rect.left;
+                y = projected.y - rect.top;
+            }
+
+            drawingState.lastX = x;
+            drawingState.lastY = y;
+        });
+
+        drawingCanvas.addEventListener('pointermove', function(e) {
+            if (!drawingState.penActive) return;
+
+            // Connector preview mode (ruler + snapped start)
+            if (drawingState.connectorDraft) {
+                const containerRect = document.getElementById('canvas-container').getBoundingClientRect();
+                const projectedScreen = projectPointOntoRuler(e.clientX, e.clientY);
+
+                // If we're close to a node, snap the endpoint to it
+                const endHit = getNodeAnchorFromClientPoint(projectedScreen.x, projectedScreen.y);
+
+                const a = getAnchorPointForPerson(drawingState.connectorDraft.fromId, drawingState.connectorDraft.fromAnchor);
+                const b = endHit
+                    ? endHit.point
+                    : { x: projectedScreen.x - containerRect.left, y: projectedScreen.y - containerRect.top };
+
+                renderCustomLines({ a, b, style: { color: drawingState.penColor, width: drawingState.penWidth, dash: getDashArrayForPenType() } });
+                return;
+            }
+
+            // Freehand draw / erase mode
+            if (!drawingState.isDrawing) return;
+
+            const rect = drawingCanvas.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+
+            if (isRulerActive() && !drawingState.eraseMode) {
+                const projected = projectPointOntoRuler(e.clientX, e.clientY);
+                x = projected.x - rect.left;
+                y = projected.y - rect.top;
+            }
+
+            drawingCtx.beginPath();
+            drawingCtx.moveTo(drawingState.lastX, drawingState.lastY);
+            drawingCtx.lineTo(x, y);
+
+            if (drawingState.eraseMode) {
+                drawingCtx.globalCompositeOperation = 'destination-out';
+                drawingCtx.strokeStyle = 'rgba(0,0,0,1)';
+                drawingCtx.lineWidth = drawingState.penWidth * 3;
+                drawingCtx.setLineDash([]);
+            } else {
+                drawingCtx.globalCompositeOperation = 'source-over';
+                drawingCtx.strokeStyle = drawingState.penColor;
+                drawingCtx.lineWidth = drawingState.penWidth;
+                drawingCtx.setLineDash(getDashArrayForPenType());
+            }
+
+            drawingCtx.lineCap = 'round';
+            drawingCtx.lineJoin = 'round';
+            drawingCtx.stroke();
+
+            drawingState.lastX = x;
+            drawingState.lastY = y;
+        });
+
+        drawingCanvas.addEventListener('pointerup', function(e) {
+            // Finish connector line if we were drafting one
+            if (drawingState.connectorDraft) {
+                const projectedScreen = projectPointOntoRuler(e.clientX, e.clientY);
+                const endHit = getNodeAnchorFromClientPoint(projectedScreen.x, projectedScreen.y);
+
+                if (endHit && endHit.id !== drawingState.connectorDraft.fromId) {
+                    familyData.customLines.push({
+                        id: 'cl-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
+                        fromId: drawingState.connectorDraft.fromId,
+                        toId: endHit.id,
+                        fromAnchor: drawingState.connectorDraft.fromAnchor,
+                        toAnchor: endHit.anchor,
+                        style: {
+                            color: drawingState.penColor,
+                            width: Number(drawingState.penWidth),
+                            dash: getDashArrayForPenType()
+                        }
+                    });
+                    saveToStorage();
+                }
+
+                drawingState.connectorDraft = null;
+                renderCustomLines();
+                drawingCanvas.releasePointerCapture?.(e.pointerId);
+                return;
+            }
+
+            drawingState.isDrawing = false;
+        });
+
+        drawingCanvas.addEventListener('pointerleave', function() {
+            drawingState.isDrawing = false;
+
+            if (drawingState.connectorDraft) {
+                drawingState.connectorDraft = null;
+                renderCustomLines();
+            }
+        });
     </script>
 </body>
 </html>
